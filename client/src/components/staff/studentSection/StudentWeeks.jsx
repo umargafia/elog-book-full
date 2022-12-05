@@ -1,7 +1,9 @@
 import { ArrowBack } from "@mui/icons-material";
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
-import React from "react";
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../../../api";
 import {
   FormButton,
   HeadingSecondary,
@@ -13,6 +15,8 @@ import { StaffWeeks } from "./StaffWeeks";
 
 export const StaffStudentWeeks = () => {
   const navigate = useNavigate();
+  const student = JSON.parse(localStorage.getItem("id"));
+  const [weeks, setWeeks] = useState([]);
 
   const style = {
     main: {
@@ -50,10 +54,29 @@ export const StaffStudentWeeks = () => {
       flexWrap: "wrap",
     },
   };
+
+  useEffect(() => {
+    console.log(student);
+    getWeeks();
+  }, []);
+
+  const getWeeks = () => {
+    console.log(student._id);
+    Axios.get(`${API}/students/weeks/${student._id}`)
+      .then((response) => {
+        const data = response.data;
+        localStorage.setItem("weeks", JSON.stringify(data.data.weeks));
+        setWeeks(data.data.weeks);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <Box>
       <MyAppBar
-        text={"Student name note"}
+        text={`${student.name}'s note`}
         navigateToProfile={() => navigate("/staffProfile")}
         navigateToHome={() => navigate("/staffHome")}
       />
@@ -61,18 +84,18 @@ export const StaffStudentWeeks = () => {
       <Box sx={style.main}>
         <Box sx={style.left}>
           <Box sx={style.roundedBox}>
-            <StaffWeeks />
-            <StaffWeeks />
-            <StaffWeeks />
+            {weeks.map((e) => {
+              return <StaffWeeks name={e.name} key={e._id} />;
+            })}
           </Box>
         </Box>
         <Box sx={style.right}>
           <HeadingSecondary text={"Student Information"} />
           <Box sx={style.info}>
-            <MyInfo text={"name"} value={"Umar musa"} />
-            <MyInfo text={"registration number"} value={"nas/ste/19/1104"} />
-            <MyInfo text={"Course of study"} value={"Software Engineering"} />
-            <MyInfo text={"Organization"} value={"Organization name"} />
+            <MyInfo text={"name"} value={student.name} />
+            <MyInfo text={"registration number"} value={student.regNo} />
+            <MyInfo text={"Course of study"} value={student.course} />
+            <MyInfo text={"Organization"} value={student.company} />
           </Box>
 
           <Box sx={style.sign}>

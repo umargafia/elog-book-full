@@ -5,18 +5,19 @@ import { validateEmail } from './studentController.js';
 //register the student
 export const registerStaff = async (req, res) => {
   // get the student information
-  const { email, password, name, phoneNumber, role } = req.body;
-  if (!email || !password || !name || !phoneNumber || !role)
-    return res.status(400).json({ msg: 'All are required' });
+  const { email, password, name, phoneNumber, role, position } = req.body;
+  if (!email || !password || !name || !phoneNumber || !role || !position)
+    return res.status(400).json({ message: 'All are required' });
 
   // validating email
   if (validateEmail(email) === false) {
-    return res.status(400).json('Invalid email');
+    return res.status(400).json({ message: 'Invalid email' });
   }
 
   // check if user exist in database
   const emailDuplicate = await StaffModel.findOne({ email });
-  if (emailDuplicate) return res.status(409).json('User already exist');
+  if (emailDuplicate)
+    return res.status(409).json({ message: 'User already exist' });
 
   try {
     // encrypting the password
@@ -29,7 +30,8 @@ export const registerStaff = async (req, res) => {
       password: hashedPwd,
       name,
       phoneNumber,
-      role
+      role,
+      position
     });
 
     if (createStudent) {
@@ -38,7 +40,8 @@ export const registerStaff = async (req, res) => {
         name: createStudent.name,
         email: createStudent.email,
         role: createStudent.role,
-        phoneNumber: createStudent.regNo
+        phoneNumber: createStudent.regNo,
+        position: createStudent.position
       });
     }
   } catch (error) {
@@ -76,7 +79,8 @@ export const loginStaff = async (req, res) => {
         email: user.email,
         name: user.name,
         role: user.role,
-        phoneNumber: user.phoneNumber
+        phoneNumber: user.phoneNumber,
+        position: user.position
       });
     } else {
       return res.status(409).json({ message: 'Invalid credentials' });
@@ -90,6 +94,20 @@ export const getAllStaff = async (req, res) => {
   try {
     const staffs = await StaffModel.find();
     return res.status(200).json(staffs);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// delete staff
+
+export const deleteStaff = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await StaffModel.findByIdAndRemove(id);
+    res.status(204).json({
+      status: 'success'
+    });
   } catch (error) {
     console.log(error);
   }

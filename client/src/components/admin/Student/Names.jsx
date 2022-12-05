@@ -39,7 +39,7 @@ export const Names = ({ name, RegNumber, onclick, id }) => {
     },
   };
   return (
-    <Box sx={style.main} onClick={onclick}>
+    <Box sx={style.main} >
       <Typography variant="h3" sx={style.text} color="green" fontWeight={600}>
         {name}
       </Typography>
@@ -47,7 +47,7 @@ export const Names = ({ name, RegNumber, onclick, id }) => {
         {RegNumber}
       </Typography>
 
-      <IconButton>
+      <IconButton onClick={onclick}>
         <Delete style={{ fontSize: "4rem" }} />
       </IconButton>
     </Box>

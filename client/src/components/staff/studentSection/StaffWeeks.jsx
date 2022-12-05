@@ -4,7 +4,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Shadow } from "../../globalCompanents/Global";
 
-export const StaffWeeks = () => {
+export const StaffWeeks = ({ name }) => {
   const navigate = useNavigate();
   const style = {
     background: "white",
@@ -30,7 +30,7 @@ export const StaffWeeks = () => {
       }}
     >
       <Typography variant="h2" color={"green"}>
-        Week 1
+        {name}
       </Typography>
       <Typography variant="h3" color={"brown"} fontWeight="800">
         From monday

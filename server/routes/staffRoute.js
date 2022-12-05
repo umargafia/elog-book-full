@@ -2,7 +2,8 @@ import express from 'express';
 import {
   registerStaff,
   loginStaff,
-  getAllStaff
+  getAllStaff,
+  deleteStaff
 } from '../controllers/staffController.js';
 
 const StaffRouter = express.Router();
@@ -15,4 +16,8 @@ StaffRouter.route('/login').post(loginStaff);
 
 //get all staffs
 StaffRouter.route('/').get(getAllStaff);
+
+//delete staff
+StaffRouter.route('/delete/:id').delete(deleteStaff);
+
 export default StaffRouter;

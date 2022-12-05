@@ -1,5 +1,8 @@
 import { Box, Card } from "@mui/material";
+import Axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../../../api";
 import {
   HeadingTertiary,
   MyCardStyle,
@@ -10,6 +13,18 @@ import { Names } from "./Names";
 
 export const StaffHome = () => {
   const navigate = useNavigate();
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    localStorage.removeItem("id");
+    getStudents();
+  }, []);
+
+  const getStudents = () => {
+    Axios.get(`${API}/students`).then((res) => {
+      setStudents(res.data);
+    });
+  };
 
   const navigateToProfile = () => {
     navigate("/staffProfile");
@@ -24,13 +39,19 @@ export const StaffHome = () => {
       <Card sx={MyCardStyle}>
         <Box sx={RoundedBox}>
           <HeadingTertiary text={"Students"} />
-          <Names
-            name="umar musa"
-            RegNumber={"Nas/ste/19/1104"}
-            onclick={() => navigate("/staff/studentWeeks")}
-          />
-          <Names name="musa isa" RegNumber={"Nas/ste/19/1000"} />
-          <Names name="kabir mustapha" RegNumber={"Nas/ste/19/2007"} />
+          {students.map((s) => {
+            return (
+              <Names
+                key={s._id}
+                name={s.name}
+                RegNumber={s.regNo}
+                onclick={() => {
+                  localStorage.setItem("id", JSON.stringify(s));
+                  navigate("/staff/studentWeeks");
+                }}
+              />
+            );
+          })}
         </Box>
       </Card>
     </Box>

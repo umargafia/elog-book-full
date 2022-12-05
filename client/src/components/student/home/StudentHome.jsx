@@ -6,29 +6,58 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import API from "../../../api";
 import { StudentAction } from "../../../store/studentSlice";
+import { FormButton, HeadingSecondary } from "../../globalCompanents/Global";
+import { Model } from "../../globalCompanents/Model";
 import { MyAppBar } from "../../globalCompanents/MyAppBar";
+import { MyInput } from "../../globalCompanents/MyInput";
 import { StudentWeeks } from "../weeks/StudentWeeks";
-import { Weeks } from "./Weeks";
 
 export const StudentHome = () => {
   const navigate = useNavigate();
-  const [weeks, setWeeks] = useState(JSON.parse(localStorage.getItem("weeks")));
-
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [weeks, setWeeks] = useState([]);
+  const [weekLength, setLength] = useState();
+  const [weekName, setWeekName] = useState("");
+  const dispatch = useDispatch();
   useEffect(() => {
+    localStorage.removeItem("id");
     getWeeks();
   }, []);
 
   const getWeeks = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
     Axios.get(`${API}/students/weeks/${user._id}`)
       .then((response) => {
         const data = response.data;
-        localStorage.setItem("weeks", JSON.stringify(data));
-        setWeeks(data.weeks);
+        localStorage.setItem("weeks", JSON.stringify(data.data));
+        setWeeks(data.data.weeks);
+        setLength(data.noOfWeeks);
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
+  const addWeek = () => {
+    dispatch(StudentAction.model());
+  };
+
+  const createWeek = () => {
+    Axios.post(`${API}/students/createWeek`, {
+      name: weekName,
+      weekId: user._id,
+    })
+      .then(() => getWeeks())
+      .catch((e) => {
+        console.log(e);
+      });
+    dispatch(StudentAction.model());
+  };
+
+  const deleteWeek = (id) => {
+    Axios.delete(`${API}/students/weeks/${id}`)
+      .then(() => getWeeks())
+      .catch((e) => console.log(e));
+  };
   const style = {
     background: "green",
     fontSize: "2rem",
@@ -42,19 +71,43 @@ export const StudentHome = () => {
   };
   return (
     <Box>
-      <MyAppBar active="home" navigateToProfile={navigateToProfile} />
+      <MyAppBar
+        active="home"
+        navigateToProfile={navigateToProfile}
+        text={user.name}
+        admin="create new week"
+        navigateToAdmin={addWeek}
+      />
       <Box sx={{ padding: " 2rem", marginTop: "15rem" }}>
-        <Weeks week={weeks} />
-        <StudentWeeks name={"Week 1"} />
-        <StudentWeeks name={"Week 2"} />
-        {/* {weeks &&
-          weeks.week.map((w) => {
-            return <StudentWeeks key={w._id} name={w.name} />;
-          })} */}
-        <Button variant={"contained"} sx={style}>
-          New Week
-        </Button>
+        {weeks.map((w) => {
+          return (
+            <StudentWeeks
+              key={w._id}
+              name={w.name}
+              onClick={() => {
+                localStorage.setItem("id", JSON.stringify(w._id));
+                navigate("/studentWeek");
+              }}
+              deleteAction={() => {
+                deleteWeek(w._id);
+              }}
+            />
+          );
+        })}
       </Box>
+      <Model>
+        <HeadingSecondary text={"Week name"} />
+        <form style={{ marginTop: "4rem" }} onSubmit={createWeek}>
+          <MyInput
+            text={"week name"}
+            type="text"
+            required
+            label="e.g Week 1"
+            onChange={(e) => setWeekName(e.target.value)}
+          />
+          <FormButton text={"create"} />
+        </form>
+      </Model>
     </Box>
   );
 };

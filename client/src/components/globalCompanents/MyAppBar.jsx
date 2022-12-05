@@ -100,6 +100,7 @@ export const MyAppBar = ({
               }}
             >
               <Logout sx={logoIcon} />
+              Logout
             </Button>
           </List>
         </Toolbar>

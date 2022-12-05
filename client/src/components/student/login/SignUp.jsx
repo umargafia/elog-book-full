@@ -66,11 +66,7 @@ export const SignUp = () => {
         text="Create an Account"
         style={{ marginBottom: "2rem", textTransform: "unset" }}
       />
-      {error && (
-        <Typography variant="h3" textAlign={"center"} color="red">
-          {error}
-        </Typography>
-      )}
+      
       <MyInput
         onChange={(e) => {
           setEmail(e.target.value);
@@ -139,6 +135,11 @@ export const SignUp = () => {
         text={loading ? "loading..." : "Create Account"}
         onClick={handleSignup}
       />
+      {error && (
+        <Typography variant="h3" textAlign={"center"} color="red">
+          {error}
+        </Typography>
+      )}
     </form>
   );
 };

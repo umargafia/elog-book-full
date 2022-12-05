@@ -22,10 +22,14 @@ const StaffSchema = mongoose.Schema({
     required: true,
     default: 'staff'
   },
+  position: {
+    type: String,
+    lowercase: true
+  },
   password: {
     type: String,
     required: true,
-    minLength: 8
+    minlength: 8
   }
 });
 

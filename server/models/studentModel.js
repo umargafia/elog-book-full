@@ -39,7 +39,12 @@ const StudentSchema = mongoose.Schema({
     type: String,
     required: true,
     lowercase: true
-  }
+  },
+  location: String,
+  superVisor: String,
+  state: String,
+  address: String
+  
 });
 
 export const StudentModel = mongoose.model('Student', StudentSchema);

@@ -4,7 +4,11 @@ import {
   getAllStudents,
   registerStudent,
   studentLogin,
-  getWeeks
+  getWeeks,
+  deleteStudent,
+  deleteWeek,
+  updateStudent,
+  getWeek
 } from '../controllers/studentController.js';
 
 const StudentRouter = express.Router();
@@ -21,7 +25,18 @@ StudentRouter.route('/').get(getAllStudents);
 //creating student week
 StudentRouter.route('/createWeek').post(addWeeks);
 
-//get all weeks
-StudentRouter.route('/weeks/:id').get(getWeeks);
+//get all weeks and delete weeks
+StudentRouter.route('/weeks/:id')
+  .get(getWeeks)
+  .delete(deleteWeek);
+
+// get week
+StudentRouter.route('/week/:id').get(getWeek);
+
+// delete a student
+StudentRouter.route('/delete/:id').delete(deleteStudent);
+
+//update student info
+StudentRouter.route('/update/:id').patch(updateStudent);
 
 export default StudentRouter;

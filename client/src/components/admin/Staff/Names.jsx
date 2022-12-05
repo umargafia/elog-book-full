@@ -39,7 +39,7 @@ export const StaffsName = ({ name, number, onclick, position, role }) => {
     },
   };
   return (
-    <Box sx={style.main} onClick={onclick}>
+    <Box sx={style.main} >
       <Typography variant="h3" sx={style.text} color="green" fontWeight={600}>
         {name}
       </Typography>
@@ -52,7 +52,7 @@ export const StaffsName = ({ name, number, onclick, position, role }) => {
       <Typography variant="h3" sx={style.text} color="gray">
         {role}
       </Typography>
-      <IconButton>
+      <IconButton onClick={onclick}>
         <Delete sx={{ fontSize: "4rem" }} />
       </IconButton>
     </Box>

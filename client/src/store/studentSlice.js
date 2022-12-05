@@ -6,7 +6,8 @@ import API from "../api";
 const initialState = {
   user: null,
   isLoading: false,
-  weeks: {},
+  id: "",
+  isOpen: false,
 };
 const studentSlice = createSlice({
   name: "student",
@@ -16,16 +17,20 @@ const studentSlice = createSlice({
       state.user = JSON.parse(localStorage.getItem("user"));
     },
     logout() {
-      localStorage.removeItem("user");
-      localStorage.removeItem("weeks");
+      // localStorage.removeItem("user");
+      // localStorage.removeItem("weeks");
+      // localStorage.removeItem("staff");
+      localStorage.clear();
     },
-    getWeeks(state) {
-      //state.weeks = getWeeks(state.user);
+    model(state) {
+      state.isOpen = !state.isOpen;
+    },
+    week(state, action) {
+      state.id = action.payload;
+      console.log(state.id);
     },
   },
 });
 
 export const StudentAction = studentSlice.actions;
 export const StudentReducer = studentSlice.reducer;
-
-const getWeeks = (user) => {};

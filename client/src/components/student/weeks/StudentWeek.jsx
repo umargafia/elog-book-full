@@ -1,8 +1,12 @@
 import { Card, Input, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import API from "../../../api";
 import {
+  FormButton,
   HeadingPrimary,
   HeadingTertiary,
   RoundedBox,
@@ -11,6 +15,15 @@ import { MyAppBar } from "../../globalCompanents/MyAppBar";
 import { Day } from "./Day";
 
 export const StudentWeek = () => {
+  const week = JSON.parse(localStorage.getItem("week"));
+  const weekId = useSelector((s) => s.student.id);
+
+  const [from, setFrom] = useState();
+
+  useEffect(() => {
+    getWeek();
+  }, []);
+
   const navigate = useNavigate();
   const style = {
     box: {
@@ -18,6 +31,7 @@ export const StudentWeek = () => {
     },
     card: {
       padding: "3rem",
+      position: "relative",
     },
     date: {
       display: "flex",
@@ -40,6 +54,19 @@ export const StudentWeek = () => {
     navigate("/studentProfile");
   };
 
+  const getWeek = () => {
+    if (weekId === "") return;
+    Axios.get(`${API}/students/week/${weekId}`)
+      .then((res) => {
+        const newWeek = res.data.data.weeks;
+        localStorage.setItem("week", JSON.stringify(newWeek));
+        console.log(week[0].name);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return (
     <Box sx={style.box}>
       <MyAppBar
@@ -53,13 +80,23 @@ export const StudentWeek = () => {
             <Typography variant="h3" marginRight={"2rem"}>
               From:
             </Typography>
-            <TextField type="date" variant="standard" />
+            <TextField
+              type="date"
+              variant="standard"
+              onChange={(e) => {
+                setFrom(e.target.value);
+              }}
+            />
           </Box>
           <Box sx={style.date}>
             <Typography variant="h3" marginRight={"2rem"}>
               To:
             </Typography>
             <TextField type="date" variant="standard" />
+
+            <div style={{ position: "absolute", top: "2rem", right: "3.7rem" }}>
+              <FormButton onClick={() => console.log(from)} text={"Update"} />
+            </div>
           </Box>
         </Box>
         <Day day="monday" />
@@ -76,14 +113,6 @@ export const StudentWeek = () => {
             sx={{ width: "45%", marginRight: "3rem" }}
             variant="filled"
             label="Add a note"
-          />
-          <TextField
-            multiline
-            maxRows={3}
-            minRows={3}
-            sx={{ width: "45%", marginRight: "3rem" }}
-            variant="filled"
-            label="comment by industrial based supervisor"
           />
         </Box>
         <Box sx={RoundedBox}>

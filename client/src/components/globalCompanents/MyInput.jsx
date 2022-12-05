@@ -48,7 +48,16 @@ const useStyle = makeStyles({
   },
 });
 export const MyInput = (props) => {
-  const { text, type, required, value, onChange: change, style, name } = props;
+  const {
+    text,
+    type,
+    required,
+    value,
+    onChange: change,
+    style,
+    name,
+    label,
+  } = props;
   const classes = useStyle();
 
   return (
@@ -57,7 +66,7 @@ export const MyInput = (props) => {
       <input
         type={type}
         className={classes.input}
-        placeholder={text}
+        placeholder={label || text}
         required={required}
         onChange={change}
         value={value}

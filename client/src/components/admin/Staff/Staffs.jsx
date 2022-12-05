@@ -1,15 +1,37 @@
-import React from "react";
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
+import API from "../../../api";
 import { StaffsName } from "./Names";
 
 export const Staffs = () => {
-  return (
-    <div>
+  const [Staffs, setStaffs] = useState([]);
+  useEffect(() => {
+    getStaffs();
+  }, []);
+
+  const getStaffs = () => {
+    Axios.get(`${API}/staff`).then((res) => {
+      setStaffs(res.data);
+      console.log(res.data);
+    });
+  };
+
+  const handleDelete = (id) => {
+    Axios.delete(`${API}/staff/delete/${id}`).then(() => getStaffs());
+  };
+
+  return Staffs.map((staff) => {
+    return (
       <StaffsName
-        name="musa isa"
-        number={"09039513111"}
+        name={staff.name}
+        number={staff.phoneNumber}
         position={"vc"}
-        role={"admin"}
+        role={staff.role}
+        key={staff._id}
+        onclick={() => {
+          handleDelete(staff._id);
+        }}
       />
-    </div>
-  );
+    );
+  });
 };

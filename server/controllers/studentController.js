@@ -29,7 +29,7 @@ export const registerStudent = async (req, res) => {
     !course ||
     !company
   )
-    return res.status(400).json({ msg: 'All are required' });
+    return res.status(400).json({ message: 'All are required' });
 
   // validating email
   if (validateEmail(email) === false) {
@@ -72,7 +72,10 @@ export const registerStudent = async (req, res) => {
         department: createStudent.department,
         course: createStudent.course,
         company: createStudent.company,
-        week: createStudent.weeks
+        location: createStudent.location,
+        superVisor: createStudent.superVisor,
+        state: createStudent.state,
+        address: createStudent.address
       });
     }
   } catch (error) {
@@ -116,7 +119,10 @@ export const studentLogin = async (req, res) => {
         department: student.department,
         course: student.course,
         company: student.company,
-        weeks: student.weeks
+        location: student.location,
+        superVisor: student.superVisor,
+        state: student.state,
+        address: student.address
       });
     } else {
       return res.status(409).json({ message: 'Invalid credentials' });
@@ -131,6 +137,22 @@ export const getAllStudents = async (req, res) => {
   try {
     const students = await StudentModel.find();
     return res.status(200).json(students);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//update studentInfo
+export const updateStudent = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const update = await StudentModel.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    res.status(200).json(update);
   } catch (error) {
     console.log(error);
   }
@@ -159,12 +181,54 @@ export const addWeeks = async (req, res) => {
 export const getWeeks = async (req, res) => {
   const id = req.params.id;
   try {
-    const weeks = await StudentWeeksModel.find();
+    const weeks = await StudentWeeksModel.find({ weekId: id });
 
     return res.status(200).json({
       status: 'success',
-      length: weeks.length,
+      noOfWeeks: weeks.length,
       data: { weeks }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//get week
+export const getWeek = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const weeks = await StudentWeeksModel.find({_id: id });
+
+    return res.status(200).json({
+      status: 'success',
+      noOfWeeks: weeks.length,
+      data: { weeks }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//delete student
+export const deleteStudent = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await StudentModel.findByIdAndRemove(id);
+    res.status(204).json({
+      status: 'success'
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// delete weeks
+export const deleteWeek = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await StudentWeeksModel.findByIdAndRemove(id);
+    res.status(204).json({
+      status: 'success'
     });
   } catch (error) {
     console.log(error);
