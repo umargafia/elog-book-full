@@ -1,17 +1,16 @@
-import { Card, Container, Paper } from "@mui/material";
+import { Card, Container, Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import Axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../../api";
+import { Footer } from "../../globalCompanents/Footer";
 import {
   FormButton,
   HeadingTertiary,
-  MyCard,
   MyCardStyle,
   RoundedBox,
 } from "../../globalCompanents/Global";
-import { Model } from "../../globalCompanents/Model";
 import { MyAppBar } from "../../globalCompanents/MyAppBar";
 import { MyInput } from "../../globalCompanents/MyInput";
 export const StudentProfile = () => {
@@ -29,6 +28,7 @@ export const StudentProfile = () => {
   const [location, setLocation] = useState(user.location || "");
   const [superVisor, setSuperVisor] = useState(user.superVisor) || "";
   const [state, setState] = useState(user.state);
+  const [error, setError] = useState(false);
 
   const navigateToHome = () => {
     navigate("/studentHome");
@@ -36,7 +36,15 @@ export const StudentProfile = () => {
 
   const updateUser = (e) => {
     e.preventDefault();
+
+    // if (!name || !number || !department || !course || !company) return;
+    if (!name) {
+      setError("company name cannot be empty");
+      return;
+    }
+
     setLoading(true);
+
     Axios.patch(`${API}/students/update/${user._id}`, {
       name,
       email,
@@ -51,10 +59,18 @@ export const StudentProfile = () => {
     })
       .then((response) => {
         localStorage.setItem("user", JSON.stringify(response.data));
+        setError("");
         setLoading(false);
       })
-      .catch((e) => {
-        console.log(e);
+      .catch((error) => {
+        const message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setLoading(false);
+        setError(message);
         setLoading(false);
       });
   };
@@ -79,14 +95,14 @@ export const StudentProfile = () => {
             />
             <MyInput
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              // onChange={(e) => setEmail(e.target.value)}
               type="email"
               text="email"
               required
             />
             <MyInput
               value={regNo}
-              onChange={(e) => setRegNo(e.target.value)}
+              // onChange={(e) => setRegNo(e.target.value)}
               type="text"
               text="Registration number"
               required
@@ -141,8 +157,19 @@ export const StudentProfile = () => {
             />
           </Box>
           <FormButton text={loading ? "loading..." : "update"} />
+          {error && (
+            <Typography
+              fontSize={"2rem"}
+              color={"brown"}
+              textAlign="center"
+              fontStyle={"italic"}
+            >
+              {error}
+            </Typography>
+          )}
         </form>
       </Card>
+      <Footer />
     </Box>
   );
 };

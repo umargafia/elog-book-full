@@ -1,7 +1,4 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
-import Axios from "axios";
-import { json, Link, useNavigate } from "react-router-dom";
-import API from "../api";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: null,
@@ -15,11 +12,9 @@ const studentSlice = createSlice({
   reducers: {
     login(state) {
       state.user = JSON.parse(localStorage.getItem("user"));
+      
     },
     logout() {
-      // localStorage.removeItem("user");
-      // localStorage.removeItem("weeks");
-      // localStorage.removeItem("staff");
       localStorage.clear();
     },
     model(state) {

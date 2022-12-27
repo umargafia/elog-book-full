@@ -125,7 +125,7 @@ export const RoundedBox = {
 };
 
 export const MyCardStyle = {
-  margin: "15rem 3rem 0 3rem",
+  margin: "15rem 3rem 1rem 3rem",
   padding: "3rem",
   borderRadius: "1rem",
 };
@@ -148,7 +148,7 @@ export const MyInfo = ({ text, value }) => {
   );
 };
 
-export const StaffArrowBack = ({ link, top= "15rem" }) => {
+export const StaffArrowBack = ({ link, top = "15rem" }) => {
   const navigate = useNavigate();
   return (
     <IconButton

@@ -44,8 +44,8 @@ export const StaffLogin = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-        setLoading(false);
-        setError(message);
+          setError(message);
+          setLoading(false);
       });
   };
 
@@ -83,7 +83,7 @@ export const StaffLogin = () => {
             textAlign="center"
             fontStyle={"italic"}
           >
-            wrong username or password
+            {error}
           </Typography>
         )}
       </form>

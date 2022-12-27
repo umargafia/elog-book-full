@@ -4,12 +4,7 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import {
-  AlqalamHeader,
-  HeadingSecondary,
-  MyBackArrow,
-} from "./../globalCompanents/Global";
-import { IconButton, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 export default function AdminTabs({ header, body1, body2 }) {
   const [value, setValue] = useState("1");

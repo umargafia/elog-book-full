@@ -17,7 +17,6 @@ export const Day = ({ day }) => {
         }}
       >
         <HeadingTertiary text={day} />
-        <TextField type="date" variant="filled" />
       </Box>
       <TextField multiline fullWidth maxRows={6} minRows={6} variant="filled" />
     </Box>

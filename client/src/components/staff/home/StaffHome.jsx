@@ -12,6 +12,7 @@ import { MyAppBar } from "../../globalCompanents/MyAppBar";
 import { Names } from "./Names";
 
 export const StaffHome = () => {
+  const staff = JSON.parse(localStorage.getItem("staff"));
   const navigate = useNavigate();
   const [students, setStudents] = useState([]);
 
@@ -33,7 +34,8 @@ export const StaffHome = () => {
     <Box>
       <MyAppBar
         active={"home"}
-        text={"Staff Dashboard"}
+        text={staff.name}
+
         navigateToProfile={navigateToProfile}
       />
       <Card sx={MyCardStyle}>

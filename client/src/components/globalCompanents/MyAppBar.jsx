@@ -63,7 +63,7 @@ export const MyAppBar = ({
       <AppBar>
         <Toolbar className={style.appBar}>
           <img src={logo} alt="auk logo" className={style.logo} />
-          <Typography textTransform={"uppercase"} variant="h2">
+          <Typography textTransform={"uppercase"} variant="h3">
             {text}
           </Typography>
           <List>
@@ -96,7 +96,7 @@ export const MyAppBar = ({
               style={{ marginLeft: "5rem" }}
               onClick={() => {
                 navigate("/");
-                dispatch(StudentAction.logout());
+                localStorage.clear();
               }}
             >
               <Logout sx={logoIcon} />

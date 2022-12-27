@@ -1,12 +1,5 @@
 import { Cancel } from "@mui/icons-material";
-import {
-  Button,
-  Card,
-  Icon,
-  IconButton,
-  Modal,
-  Typography,
-} from "@mui/material";
+import { Card, IconButton, Modal } from "@mui/material";
 
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

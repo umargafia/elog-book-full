@@ -15,10 +15,10 @@ import { MyInput } from "../../globalCompanents/MyInput";
 export const SignUp = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const navigate = useNavigate("");
+  const dispatch = useDispatch("");
 
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [regNumber, setRegNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +30,7 @@ export const SignUp = () => {
   //signup student
   const handleSignup = (e) => {
     e.preventDefault();
+
     setLoading(true);
     const data = {
       email,
@@ -44,10 +45,10 @@ export const SignUp = () => {
 
     Axios.post(`${API}/students/register`, data)
       .then((response) => {
+        navigate("/studentHome");
         localStorage.setItem("user", JSON.stringify(response.data));
         dispatch(StudentAction.login());
         setLoading(false);
-        navigate("/studentHome");
       })
       .catch((error) => {
         const message =

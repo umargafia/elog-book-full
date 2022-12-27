@@ -21,7 +21,7 @@ export const Footer = () => {
         }}
         className={style.text}
       >
-        copy right
+        &#169;copyright {new Date().getFullYear()}
       </Typography>
     </Box>
   );

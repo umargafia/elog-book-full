@@ -1,5 +1,3 @@
-import { useContext, useEffect } from "react";
-import { useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Navigate,
@@ -23,9 +21,10 @@ import { StudentLogin } from "./components/student/login/StudentLogin";
 import { StudentWeek } from "./components/student/weeks/StudentWeek";
 
 function App() {
-  const studentUser = true;
 
-  const staffUser = true;
+  const studentUser = JSON.parse(localStorage.getItem("user"));;
+  const staffUser = JSON.parse(localStorage.getItem("staff"));;
+
   const StaffAuth = ({ children }) => {
     return staffUser ? children : <Navigate to="/staff" />;
   };
@@ -132,7 +131,7 @@ function App() {
             </AdminProfile>
           }
         />
-          <Route
+        <Route
           path="/addStaff"
           element={
             <AddStaff>

@@ -12,7 +12,6 @@ export const Staffs = () => {
   const getStaffs = () => {
     Axios.get(`${API}/staff`).then((res) => {
       setStaffs(res.data);
-      console.log(res.data);
     });
   };
 

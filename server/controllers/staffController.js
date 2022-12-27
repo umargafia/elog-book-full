@@ -58,7 +58,7 @@ export const loginStaff = async (req, res) => {
 
   // validating email
   if (validateEmail(email) === false) {
-    return res.status(400).json('Invalid email');
+    return res.status(400).json({ message: 'Invalid email' });
   }
 
   //check if user exist

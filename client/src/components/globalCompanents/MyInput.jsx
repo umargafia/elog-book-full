@@ -11,7 +11,6 @@ const useStyle = makeStyles({
     border: " none",
     borderBottom: "3px solid transparent",
     width: "80%",
-    textTransform: "capitalize",
     minWidth: "50%",
     display: " block",
     transition: "all .3s",

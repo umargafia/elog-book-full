@@ -3,7 +3,7 @@ import { IconButton, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { MyInput } from "../../globalCompanents/MyInput";
 import Tabs from "../../globalCompanents/Tabs";
 import {
@@ -35,10 +35,10 @@ const Login = () => {
   const [error, setError] = useState(false);
   const dispatch = useDispatch();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     setLoading(true);
-      Axios.post(`${API}/students/login`, {
+    Axios.post(`${API}/students/login`, {
       email: userName,
       password: password,
     })
@@ -55,7 +55,7 @@ const Login = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-          setLoading(false);
+        setLoading(false);
         setError(message);
       });
   };
@@ -66,11 +66,7 @@ const Login = () => {
         text="Login as a Student"
         style={{ marginBottom: "2rem", textTransform: "unset" }}
       />
-      {error && (
-        <Typography variant="h3" textAlign={"center"} color="red">
-          {error}
-        </Typography>
-      )}
+
       <MyInput
         text={"Login"}
         type="text"
@@ -84,9 +80,12 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-        
       <FormButton text={loading ? "loading..." : "Login"} />
-      
+      {error && (
+        <Typography variant="h3" textAlign={"center"} color="red">
+          {error}
+        </Typography>
+      )}
     </form>
   );
 };

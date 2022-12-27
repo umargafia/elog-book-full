@@ -10,6 +10,7 @@ import Axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../api";
+import { Footer } from "../globalCompanents/Footer";
 import {
   HeadingTertiary,
   MyCardStyle,
@@ -124,6 +125,8 @@ export const AddStaff = () => {
           )}
         </form>
       </Card>
+      <Footer/>
+
     </div>
   );
 };

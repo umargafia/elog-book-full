@@ -56,12 +56,10 @@ export const StaffStudentWeeks = () => {
   };
 
   useEffect(() => {
-    console.log(student);
     getWeeks();
   }, []);
 
   const getWeeks = () => {
-    console.log(student._id);
     Axios.get(`${API}/students/weeks/${student._id}`)
       .then((response) => {
         const data = response.data;
@@ -69,7 +67,6 @@ export const StaffStudentWeeks = () => {
         setWeeks(data.data.weeks);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 

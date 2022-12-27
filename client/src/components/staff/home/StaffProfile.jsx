@@ -12,19 +12,29 @@ import { MyInput } from "../../globalCompanents/MyInput";
 
 export const StaffProfile = () => {
   const navigate = useNavigate();
+  const staff = JSON.parse(localStorage.getItem("staff"));
+
   const navigateToHome = () => {
     navigate("/staffHome");
   };
   return (
     <Box>
-      <MyAppBar active={"profile"} navigateToHome={navigateToHome} />
+      <MyAppBar
+        active={"profile"}
+        navigateToHome={navigateToHome}
+        text={staff.name}
+      />
       <Card sx={MyCardStyle}>
         <Box sx={RoundedBox}>
           <HeadingTertiary text={"Staff information"} />
-          <MyInput text={"Staff Name"} />
-          <MyInput text={"Staff Email"} type="email" />
-          <MyInput text={"Phone number"} type="number" />
-          <MyInput text={"Staff position"} />
+          <MyInput text={"Staff Name"} value={staff.name} />
+          <MyInput text={"Staff Email"} type="email" value={staff.email} />
+          <MyInput
+            text={"Phone number"}
+            type="number"
+            value={staff.phoneNumber}
+          />
+          <MyInput text={"Staff position"} value={staff.position} />
         </Box>
       </Card>
     </Box>

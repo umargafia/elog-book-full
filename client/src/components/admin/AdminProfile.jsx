@@ -2,6 +2,7 @@ import { Card } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Footer } from "../globalCompanents/Footer";
 import {
   HeadingTertiary,
   MyCardStyle,
@@ -12,10 +13,10 @@ import { MyInput } from "../globalCompanents/MyInput";
 
 export const AdminProfile = () => {
   const navigate = useNavigate();
-  const [userName, setUsername] = useState();
-  const [email, setEmail] = useState();
-  const [number, setNumber] = useState();
-  const [position, setPosition] = useState();
+  const [userName, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [number, setNumber] = useState("");
+  const [position, setPosition] = useState("");
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("staff"));
@@ -43,6 +44,8 @@ export const AdminProfile = () => {
           <MyInput text={"Staff position"} type="text" value={position} />
         </Box>
       </Card>
+      <Footer/>
+
     </div>
   );
 };
