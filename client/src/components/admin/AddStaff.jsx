@@ -32,7 +32,7 @@ export const AddStaff = () => {
   const [loading, setLoading] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const data = {
       name: name,
       email: email,
@@ -125,8 +125,7 @@ export const AddStaff = () => {
           )}
         </form>
       </Card>
-      <Footer/>
-
+      <Footer />
     </div>
   );
 };
