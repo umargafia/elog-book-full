@@ -1,31 +1,31 @@
-import { Typography } from "@mui/material";
-import Axios from "axios";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import API from "../../../api";
-import { StudentAction } from "../../../store/studentSlice";
+import { Typography } from '@mui/material';
+import Axios from 'axios';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import API from '../../../api';
+import { StudentAction } from '../../../store/studentSlice';
 import {
   FormButton,
   FormStyle,
   HeadingSecondary,
-} from "../../globalCompanents/Global";
-import { MyInput } from "../../globalCompanents/MyInput";
+} from '../../globalCompanents/Global';
+import { MyInput } from '../../globalCompanents/MyInput';
 
 export const SignUp = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate("");
-  const dispatch = useDispatch("");
+  const navigate = useNavigate('');
+  const dispatch = useDispatch('');
 
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [regNumber, setRegNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [number, setNumber] = useState("");
-  const [department, setDepartment] = useState("");
-  const [course, setCourse] = useState("");
-  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [regNumber, setRegNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [number, setNumber] = useState('');
+  const [department, setDepartment] = useState('');
+  const [course, setCourse] = useState('');
+  const [company, setCompany] = useState('');
 
   //signup student
   const handleSignup = (e) => {
@@ -45,9 +45,8 @@ export const SignUp = () => {
 
     Axios.post(`${API}/students/register`, data)
       .then((response) => {
-        navigate("/studentHome");
-        localStorage.setItem("user", JSON.stringify(response.data));
-        dispatch(StudentAction.login());
+        dispatch(StudentAction.login(response.data));
+        navigate('/studentHome');
         setLoading(false);
       })
       .catch((error) => {
@@ -65,14 +64,14 @@ export const SignUp = () => {
     <form style={FormStyle} onSubmit={handleSignup}>
       <HeadingSecondary
         text="Create an Account"
-        style={{ marginBottom: "2rem", textTransform: "unset" }}
+        style={{ marginBottom: '2rem', textTransform: 'unset' }}
       />
-      
+
       <MyInput
         onChange={(e) => {
           setEmail(e.target.value);
         }}
-        type={"email"}
+        type={'email'}
         text="Email"
         required={true}
       />
@@ -80,7 +79,7 @@ export const SignUp = () => {
         onChange={(e) => {
           setPassword(e.target.value);
         }}
-        type={"password"}
+        type={'password'}
         text="create password"
         required={true}
       />
@@ -88,7 +87,7 @@ export const SignUp = () => {
         onChange={(e) => {
           setName(e.target.value);
         }}
-        type={"text"}
+        type={'text'}
         text="student Name"
         required={true}
       />
@@ -96,7 +95,7 @@ export const SignUp = () => {
         onChange={(e) => {
           setRegNumber(e.target.value);
         }}
-        type={"text"}
+        type={'text'}
         text="registration number"
         required={true}
       />
@@ -104,7 +103,7 @@ export const SignUp = () => {
         onChange={(e) => {
           setNumber(e.target.value);
         }}
-        type={"text"}
+        type={'text'}
         text="Phone number"
         required={true}
       />
@@ -112,7 +111,7 @@ export const SignUp = () => {
         onChange={(e) => {
           setDepartment(e.target.value);
         }}
-        type={"text"}
+        type={'text'}
         text="department"
         required={true}
       />
@@ -120,7 +119,7 @@ export const SignUp = () => {
         onChange={(e) => {
           setCourse(e.target.value);
         }}
-        type={"text"}
+        type={'text'}
         text="course of study"
         required={true}
       />
@@ -128,16 +127,16 @@ export const SignUp = () => {
         onChange={(e) => {
           setCompany(e.target.value);
         }}
-        type={"text"}
+        type={'text'}
         text="name of company attached"
         required={true}
       />
       <FormButton
-        text={loading ? "loading..." : "Create Account"}
+        text={loading ? 'loading...' : 'Create Account'}
         onClick={handleSignup}
       />
       {error && (
-        <Typography variant="h3" textAlign={"center"} color="red">
+        <Typography variant="h3" textAlign={'center'} color="red">
           {error}
         </Typography>
       )}

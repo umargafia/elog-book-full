@@ -1,28 +1,26 @@
-import { ArrowBack } from "@mui/icons-material";
-import { IconButton, Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Box } from "@mui/system";
-import React, { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { MyInput } from "../../globalCompanents/MyInput";
-import Tabs from "../../globalCompanents/Tabs";
+import { Typography } from '@mui/material';
+import { Box } from '@mui/system';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MyInput } from '../../globalCompanents/MyInput';
+import Tabs from '../../globalCompanents/Tabs';
 import {
   HeadingSecondary,
   FormStyle,
   FormButton,
   MyBackArrow,
-} from "../../globalCompanents/Global";
-import { SignUp } from "./SignUp";
-import API from "../../../api";
-import { useDispatch } from "react-redux";
-import { StudentAction } from "../../../store/studentSlice";
-import Axios from "axios";
+} from '../../globalCompanents/Global';
+import { SignUp } from './SignUp';
+import API from '../../../api';
+import { useDispatch } from 'react-redux';
+import { StudentAction } from '../../../store/studentSlice';
+import Axios from 'axios';
 
 export const StudentLogin = () => {
   return (
     <Box>
-      <MyBackArrow link={"/"} />
-      <Tabs header={"Student"} body1={<Login />} body2={<Signup />} />
+      <MyBackArrow link={'/'} />
+      <Tabs header={'Student'} body1={<Login />} body2={<Signup />} />
     </Box>
   );
 };
@@ -43,10 +41,10 @@ const Login = () => {
       password: password,
     })
       .then((data) => {
-        localStorage.setItem("user", JSON.stringify(data.data));
+        localStorage.setItem('user', JSON.stringify(data.data));
         dispatch(StudentAction.login());
         setLoading(false);
-        navigate("/studentHome");
+        navigate('/studentHome');
       })
       .catch((error) => {
         const message =
@@ -64,25 +62,25 @@ const Login = () => {
     <form style={FormStyle} onSubmit={handleLogin} autoCapitalize="off">
       <HeadingSecondary
         text="Login as a Student"
-        style={{ marginBottom: "2rem", textTransform: "unset" }}
+        style={{ marginBottom: '2rem', textTransform: 'unset' }}
       />
 
       <MyInput
-        text={"Login"}
+        text={'Login'}
         type="text"
         required={true}
         onChange={(e) => setUsername(e.target.value)}
       />
       <MyInput
-        text={"password"}
+        text={'password'}
         type="password"
         required={true}
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <FormButton text={loading ? "loading..." : "Login"} />
+      <FormButton text={loading ? 'loading...' : 'Login'} />
       {error && (
-        <Typography variant="h3" textAlign={"center"} color="red">
+        <Typography variant="h3" textAlign={'center'} color="red">
           {error}
         </Typography>
       )}

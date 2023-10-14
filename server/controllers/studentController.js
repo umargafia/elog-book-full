@@ -29,7 +29,7 @@ export const registerStudent = async (req, res) => {
     !course ||
     !company
   )
-    return res.status(400).json({ message: 'All are required' });
+    return res.status(400).json({ message: 'All fields are required' });
 
   // validating email
   if (validateEmail(email) === false) {
@@ -75,7 +75,8 @@ export const registerStudent = async (req, res) => {
         location: createStudent.location,
         superVisor: createStudent.superVisor,
         state: createStudent.state,
-        address: createStudent.address
+        address: createStudent.address,
+        type: createStudent.type
       });
     }
   } catch (error) {
@@ -100,10 +101,7 @@ export const studentLogin = async (req, res) => {
 
     // check if user exist
     const student = await StudentModel.findOne({ email });
-    if (!student)
-      return res
-        .status(404)
-        .json({ message: `student with this email: ${email} is not found` });
+    if (!student) return res.status(404).json({ message: `user not found` });
 
     //validating student password
     const validatePassword = await bcrypt.compare(password, student.password);
@@ -197,7 +195,7 @@ export const getWeeks = async (req, res) => {
 export const getWeek = async (req, res) => {
   const id = req.params.id;
   try {
-    const weeks = await StudentWeeksModel.find({_id: id });
+    const weeks = await StudentWeeksModel.find({ _id: id });
 
     return res.status(200).json({
       status: 'success',

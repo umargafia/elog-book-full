@@ -6,8 +6,12 @@ import { validateEmail } from './studentController.js';
 export const registerStaff = async (req, res) => {
   // get the student information
   const { email, password, name, phoneNumber, role, position } = req.body;
-  if (!email || !password || !name || !phoneNumber || !role || !position)
+
+  console.log({ email, password, name, phoneNumber, role, position });
+
+  if (!email || !password || !name || !phoneNumber || !role || !position) {
     return res.status(400).json({ message: 'All are required' });
+  }
 
   // validating email
   if (validateEmail(email) === false) {
@@ -63,10 +67,7 @@ export const loginStaff = async (req, res) => {
 
   //check if user exist
   const user = await StaffModel.findOne({ email });
-  if (!user)
-    return res
-      .status(404)
-      .json({ message: `User with this email: ${email} is not found` });
+  if (!user) return res.status(404).json({ message: `User not found` });
 
   try {
     //validating user password
