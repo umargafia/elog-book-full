@@ -16,6 +16,25 @@ exports.getMe = (req, res, next) => {
   next();
 };
 
+const sendData = ({ user, statusCode, res }) => {
+  res.status(statusCode).json({
+    status: 'success',
+    data: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      regno: user.regno,
+      role: user.role,
+      state: user.state,
+      localgov: user.localgov,
+      organization: user.organization,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    }
+  });
+};
+
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) Create error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
@@ -28,7 +47,16 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'phone',
+    'regno',
+    'state',
+    'localgov',
+    'organization',
+    'course'
+  );
 
   // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
@@ -36,16 +64,11 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     runValidators: true
   });
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      user: updatedUser
-    }
-  });
+  sendData({ statusCode: 200, user: updatedUser, res });
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, { active: false });
+  await User.findByIdAndDelete(req.user.id);
 
   res.status(204).json({
     status: 'success',

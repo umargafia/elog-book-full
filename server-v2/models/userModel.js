@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema(
       default: 'student'
     },
     course: String,
-    State: String,
+    state: String,
     localgov: String,
     organization: String,
     passwordChangedAt: Date,
