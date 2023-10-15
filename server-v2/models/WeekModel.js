@@ -13,7 +13,10 @@ const weekSchema = new mongoose.Schema(
       require: [true, 'Please Provide Week name']
     },
     review: String,
-    startDate: Date
+    startDate: {
+      type: Date,
+      default: Date.now()
+    }
   },
   {
     timestamps: true
