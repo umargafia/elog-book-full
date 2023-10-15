@@ -1,6 +1,14 @@
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const Week = require('../models/WeekModel');
+const { filterObj } = require('../utils/FilterObject');
+
+const sendData = ({ status, res, week }) => {
+  res.status(status).json({
+    status: 'success',
+    data: week
+  });
+};
 
 exports.crateWeek = catchAsync(async (req, res, next) => {
   //get the user and week name
@@ -15,16 +23,45 @@ exports.crateWeek = catchAsync(async (req, res, next) => {
   //create week
   const week = await Week.create({ user: user._id, name, startDate });
   //returm response
+  sendData({ status: 201, res, week });
+});
 
-  res.status(201).json({
-    status: 'success',
-    data: {
-      id: week._id,
-      user: week.user,
-      name: week.name,
-      startDate: week.startDate,
-      createdAt: week.createdAt,
-      updatedAt: week.updatedAt
-    }
+exports.getAllWeeks = catchAsync(async (req, res, next) => {
+  // get the week id
+  const { id } = req.params;
+
+  const week = await Week.find({ user: id });
+  sendData({ res, status: 200, week });
+});
+
+exports.getWeek = catchAsync(async (req, res, next) => {
+  // get the week id
+  const { id } = req.params;
+
+  const week = await Week.findOne({ _id: id });
+
+  sendData({ res, status: 200, week });
+});
+
+exports.updateWeek = catchAsync(async (req, res, next) => {
+  //get the week id and values to be updated
+  const { id } = req.params;
+
+  const filteredBody = filterObj(req.body, 'startDate', 'name', 'review');
+  //update the week
+  const week = await Week.findByIdAndUpdate(id, filteredBody, {
+    new: true,
+    runValidators: true
   });
+
+  //send output
+  sendData({ res, status: 201, week });
+});
+exports.deleteWeek = catchAsync(async (req, res, next) => {
+  //get the week id and values to be updated
+  const { id } = req.params;
+
+  //delete week
+  const week = await Week.findByIdAndDelete(id);
+  sendData({ res, status: 204, week });
 });
