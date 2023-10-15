@@ -1,39 +1,38 @@
-import { Button, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import Axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import API from "../../../api";
-import { StudentAction } from "../../../store/studentSlice";
-import { Footer } from "../../globalCompanents/Footer";
-import {
-  FormButton,
-  HeadingSecondary,
-  HeadingTertiary,
-} from "../../globalCompanents/Global";
-import { Model } from "../../globalCompanents/Model";
-import { MyAppBar } from "../../globalCompanents/MyAppBar";
-import { MyInput } from "../../globalCompanents/MyInput";
-import { StudentWeeks } from "../weeks/StudentWeeks";
+import React, { useEffect, useState } from 'react';
+import { Button, Card } from '@mui/material';
+import { Box } from '@mui/system';
+import Axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+
+import API from '../../../api';
+import { StudentAction } from '../../../store/studentSlice';
+import { Footer } from '../../globalCompanents/Footer';
+import { FormButton, HeadingSecondary } from '../../globalCompanents/Global';
+import { Model } from '../../globalCompanents/Model';
+import { MyAppBar } from '../../globalCompanents/MyAppBar';
+import { MyInput } from '../../globalCompanents/MyInput';
+import { StudentWeeks } from '../weeks/StudentWeeks';
+import { StudentProfile } from './StudentProfile';
 
 export const StudentHome = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user } = useSelector((state) => state.student);
   const [weeks, setWeeks] = useState([]);
   const [length, setLength] = useState(0);
-  const [weekName, setWeekName] = useState("");
+  const [weekName, setWeekName] = useState('');
   const dispatch = useDispatch();
+
   useEffect(() => {
-    localStorage.removeItem("id");
     getWeeks();
-  }, []);
+    setWeekName(parseInt(length) + 1);
+  }, [length]);
 
   const getWeeks = () => {
     Axios.get(`${API}/students/weeks/${user._id}`)
       .then((response) => {
         const data = response.data;
-        localStorage.setItem("weeks", JSON.stringify(data.data));
         setWeeks(data.data.weeks);
         setLength(data.noOfWeeks);
       })
@@ -64,15 +63,17 @@ export const StudentHome = () => {
       .catch((e) => console.log(e));
   };
   const style = {
-    background: "green",
-    fontSize: "2rem",
-    "&:hover": {
-      background: "rgb(1, 56, 1);",
+    card: {
+      padding: ' 2rem',
+      mt: 2,
+      height: '70vh',
+      background: '#eee',
+      mb: 1,
     },
   };
 
   const navigateToProfile = () => {
-    navigate("/studentProfile");
+    navigate('/studentProfile');
   };
   return (
     <Box>
@@ -83,52 +84,60 @@ export const StudentHome = () => {
         admin="create new week"
         navigateToAdmin={addWeek}
       />
-      <Box sx={{ padding: " 2rem", marginTop: "15rem" }}>
-        {length !== 0 ? (
-          weeks.map((w) => {
-            return (
-              <StudentWeeks
-                key={w._id}
-                name={w.name}
-                onClick={() => {
-                  localStorage.setItem("id", JSON.stringify(w._id));
-                  navigate("/studentWeek");
+      <Card sx={style.card}>
+        <Grid container>
+          <Grid xs={12} sx={{ height: 600, overflow: 'auto' }} md={8}>
+            {length !== 0 ? (
+              weeks.map((w) => {
+                return (
+                  <StudentWeeks
+                    key={w._id}
+                    name={w.name}
+                    onClick={() => {
+                      navigate(`/studentWeek/${w._id}`);
+                    }}
+                    deleteAction={() => {
+                      deleteWeek(w._id);
+                    }}
+                  />
+                );
+              })
+            ) : (
+              <Box
+                sx={{
+                  textAlign: 'center',
+                  marginTop: '15%',
                 }}
-                deleteAction={() => {
-                  deleteWeek(w._id);
-                }}
-              />
-            );
-          })
-        ) : (
-          <Box
-            sx={{
-              textAlign: "center",
-              marginTop: "15%",
-            }}
-          >
-            <HeadingSecondary text={"no weeks"} />
-            <Button
-              onClick={addWeek}
-              variant="contained"
-              style={{ background: "green", fontSize: "1rem" }}
-            >
-              add a week
-            </Button>
-          </Box>
-        )}
-      </Box>
+              >
+                <HeadingSecondary text={'no weeks'} />
+                <Button
+                  onClick={addWeek}
+                  variant="contained"
+                  style={{ background: 'green', fontSize: '1rem' }}
+                >
+                  add a week
+                </Button>
+              </Box>
+            )}
+          </Grid>
+          <Grid xs={12} ml={5} md={3.5}>
+            <Card sx={{ height: 500 }}>
+              <StudentProfile />
+            </Card>
+          </Grid>
+        </Grid>
+      </Card>
       <Model>
-        <HeadingSecondary text={"Week name"} />
-        <form style={{ marginTop: "4rem" }} onSubmit={createWeek}>
+        <HeadingSecondary text={'Week number'} />
+        <form style={{ marginTop: '4rem' }} onSubmit={createWeek}>
           <MyInput
-            text={"week name"}
+            text={'week number'}
             type="text"
             required
-            label="e.g Week 1"
+            value={weekName}
             onChange={(e) => setWeekName(e.target.value)}
           />
-          <FormButton text={"create"} />
+          <FormButton text={'create'} />
         </form>
       </Model>
       {length !== 0 && <Footer />}

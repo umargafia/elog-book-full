@@ -41,8 +41,7 @@ const Login = () => {
       password: password,
     })
       .then((data) => {
-        localStorage.setItem('user', JSON.stringify(data.data));
-        dispatch(StudentAction.login());
+        dispatch(StudentAction.login(data.data));
         setLoading(false);
         navigate('/studentHome');
       })

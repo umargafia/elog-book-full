@@ -17,8 +17,9 @@ const studentSlice = createSlice({
       state.user = data;
       localStorage.setItem('user', JSON.stringify(data));
     },
-    logout() {
+    logout(state) {
       localStorage.clear();
+      state.user = null;
     },
     model(state) {
       state.isOpen = !state.isOpen;

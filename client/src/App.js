@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -17,62 +16,62 @@ import { StudentHome } from './components/student/home/StudentHome';
 import { StudentProfile } from './components/student/home/StudentProfile';
 import { StudentLogin } from './components/student/login/StudentLogin';
 import { StudentWeek } from './components/student/weeks/StudentWeek';
+import { Box } from '@mui/material';
 
 function App() {
-  const [curUser, setUser] = useState({});
   const { user } = useSelector((state) => state.student);
-  useEffect(() => {
-    setUser(user);
-  }, [user]);
+
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          exact
-          element={curUser?.type === 'student' ? <StudentHome /> : <HomePage />}
-        />
-        <Route path="/student" element={<StudentLogin />} />
-        <Route path="/staff" element={<StaffLogin />} />
+    <Box m={2} mx={10}>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            exact
+            element={user?.type === 'student' ? <StudentHome /> : <HomePage />}
+          />
+          <Route path="/student" element={<StudentLogin />} />
+          <Route path="/staff" element={<StaffLogin />} />
 
-        {/* student section */}
-        <Route path="/studentHome" element={<StudentHome />} />
-        <Route path="/studentProfile" element={<StudentProfile />} />
-        <Route path="/studentWeek" element={<StudentWeek />} />
+          {/* student section */}
+          <Route path="/studentHome" element={<StudentHome />} />
+          <Route path="/studentProfile" element={<StudentProfile />} />
+          <Route path="/studentWeek/:id" element={<StudentWeek />} />
 
-        {/* staff section */}
-        <Route path="/staffHome" element={<StaffHome />} />
-        <Route path="/staffProfile" element={<StaffProfile />} />
-        <Route path="/studentNote" element={<StudentNote />} />
-        <Route path="/AboutStudent" element={<AboutStudent />} />
-        <Route path="/staff/studentWeeks" element={<StaffStudentWeeks />} />
-        <Route path="/more" element={<More />} />
-        <Route
-          path="/admin"
-          element={
-            <Admin>
-              <More />
-            </Admin>
-          }
-        />
-        <Route
-          path="/adminProfile"
-          element={
-            <AdminProfile>
-              <More />
-            </AdminProfile>
-          }
-        />
-        <Route
-          path="/addStaff"
-          element={
-            <AddStaff>
-              <More />
-            </AddStaff>
-          }
-        />
-      </Routes>
-    </Router>
+          {/* staff section */}
+          <Route path="/staffHome" element={<StaffHome />} />
+          <Route path="/staffProfile" element={<StaffProfile />} />
+          <Route path="/studentNote" element={<StudentNote />} />
+          <Route path="/AboutStudent" element={<AboutStudent />} />
+          <Route path="/staff/studentWeeks" element={<StaffStudentWeeks />} />
+          <Route path="/more" element={<More />} />
+          <Route
+            path="/admin"
+            element={
+              <Admin>
+                <More />
+              </Admin>
+            }
+          />
+          <Route
+            path="/adminProfile"
+            element={
+              <AdminProfile>
+                <More />
+              </AdminProfile>
+            }
+          />
+          <Route
+            path="/addStaff"
+            element={
+              <AddStaff>
+                <More />
+              </AddStaff>
+            }
+          />
+        </Routes>
+      </Router>
+    </Box>
   );
 }
 
