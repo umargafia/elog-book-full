@@ -38,13 +38,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please Enter your Phone Number']
     },
-    regno: {
-      type: String,
-      required: [true, 'Enter Your Registration Number']
-    },
+    regno: String,
     role: {
       type: String,
-      enum: ['student', 'admin', 'superAdmin', 'organisation'],
+      enum: ['student', 'admin', 'staff', 'organisation'],
       default: 'student'
     },
     course: String,

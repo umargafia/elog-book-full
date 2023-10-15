@@ -34,14 +34,27 @@ const createSendToken = (user, statusCode, res) => {
     data: {
       id: user._id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      phone: user.phone,
+      regno: user.regno,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     }
   });
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
   // Extract signup data from request body
-  const { name, email, password, passwordConfirm } = req.body;
+  const {
+    name,
+    email,
+    password,
+    passwordConfirm,
+    phone,
+    regno,
+    role
+  } = req.body;
 
   // Check if email already exists
   const existingUser = await User.findOne({ email });
@@ -60,9 +73,9 @@ exports.signup = catchAsync(async (req, res, next) => {
   }
   if (!password) {
     return next(new AppError('Password is required', 400));
-  } else if (password.length < 8) {
+  } else if (password.length < 6) {
     return next(
-      new AppError('Password must be at least 8 characters long', 400)
+      new AppError('Password must be at least 6 characters long', 400)
     );
   }
   if (!passwordConfirm) {
@@ -72,12 +85,28 @@ exports.signup = catchAsync(async (req, res, next) => {
       new AppError('Password confirmation does not match password', 400)
     );
   }
+  if (!phone) {
+    return next(new AppError('Phone Number is required', 400));
+  }
+  if (!role || role === 'student') {
+    if (!regno) {
+      return next(new AppError('Reqistration Number is required', 400));
+    }
+  }
 
+  const regNoDuplicate = await User.find({ regno: regno });
+  if (regNoDuplicate[0]?.regno) {
+    return next(new AppError('Reqistration Number already exist', 409));
+  }
+  //create user
   const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm
+    name,
+    email,
+    password,
+    passwordConfirm,
+    phone,
+    regno,
+    role
   });
 
   createSendToken(newUser, 201, res);
