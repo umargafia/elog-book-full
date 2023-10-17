@@ -42,7 +42,11 @@ const StudentSchema = mongoose.Schema({
   location: String,
   superVisor: String,
   state: String,
-  address: String
+  address: String,
+  type: {
+    type: String,
+    default: 'student'
+  }
 });
 
 export const StudentModel = mongoose.model('Student', StudentSchema);

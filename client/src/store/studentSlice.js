@@ -1,21 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+
+const user = JSON.parse(localStorage.getItem('user'));
 
 const initialState = {
-  user: null,
+  user: user ? user : null,
   isLoading: false,
-  id: "",
+  id: '',
   isOpen: false,
 };
 const studentSlice = createSlice({
-  name: "student",
+  name: 'student',
   initialState: initialState,
   reducers: {
-    login(state) {
-      state.user = JSON.parse(localStorage.getItem("user"));
-      
+    login(state, action) {
+      const data = action.payload;
+      state.user = data;
+      localStorage.setItem('user', JSON.stringify(data));
     },
-    logout() {
+    logout(state) {
       localStorage.clear();
+      state.user = null;
     },
     model(state) {
       state.isOpen = !state.isOpen;
