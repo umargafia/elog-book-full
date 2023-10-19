@@ -13,6 +13,7 @@ router.get('/getWeek/:id', weekController.getWeek);
 router.get('/day/:weekId', dayController.GetAllDays);
 router.post('/day/create', dayController.crateDay);
 router.patch('/day/update/', dayController.updateDay);
+router.get('/day/getDay/:id', dayController.GetDay);
 
 router.use(authController.restrictTo('student'));
 router.post('/create', weekController.crateWeek);

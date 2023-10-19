@@ -201,7 +201,7 @@ export const StudentProfile = ({ staff }) => {
   );
 };
 
-const ListItem = ({ header, title, small }) => {
+export const ListItem = ({ header, title, small }) => {
   return (
     <Box display="flex" m={1} flexWrap="wrap">
       <Typography variant="h4" textTransform={'capitalize'} color="gray" mr={1}>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import API, { CreateDay, GetWeek, getAllDays } from '../../../api';
+import { CreateDay, GetWeek, getAllDays } from '../../../api';
 import { Day } from './Day';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { ArrowBackIos } from '@mui/icons-material';
@@ -12,9 +12,16 @@ import formatDaysFunction from '../../../constants/FromatDaysFunction';
 import formatDate from '../../../constants/formatDate';
 import { HeadingTertiary } from '../../globalCompanents/Global';
 
-export const StudentWeek = () => {
+export const StudentWeek = ({ staffData = '' }) => {
   // Destructure variables directly in the function signature
-  const { id } = useParams();
+  const { id: WeekId } = useParams();
+  const { week } = staffData;
+  let id;
+  if (week) {
+    id = week;
+  } else {
+    id = WeekId;
+  }
   const { token } = useSelector((state) => state.student);
   const [days, setDays] = useState([]);
   const [weekInfo, setWeekInfo] = useState({ weekName: '', WeekDate: '' });
@@ -97,7 +104,7 @@ export const StudentWeek = () => {
               display="flex"
               alignItems="center"
               color="blue"
-              onClick={() => navigate('/')}
+              onClick={() => navigate(-1)}
               sx={{ cursor: 'pointer' }}
             >
               <ArrowBackIos sx={{ fontSize: 30 }} />
@@ -121,7 +128,12 @@ export const StudentWeek = () => {
         <Grid xs={12} display="flex">
           <Box flex={2}>
             {days.map((day) => (
-              <Day day={day} key={day._id} weekId={id} />
+              <Day
+                day={day}
+                key={day._id}
+                weekId={id}
+                staffData={week ? true : false}
+              />
             ))}
           </Box>
           <Box flex={1}>

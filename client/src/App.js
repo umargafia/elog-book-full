@@ -53,9 +53,12 @@ function App() {
           {/* staff section */}
           <Route path="/staffHome" element={<StaffHome />} />
           <Route path="/staffProfile" element={<StaffProfile />} />
-          <Route path="/studentNote" element={<StudentNote />} />
+          <Route path="/studentNote/:weekId" element={<StudentNote />} />
           <Route path="/AboutStudent" element={<AboutStudent />} />
-          <Route path="/staff/studentWeeks" element={<StaffStudentWeeks />} />
+          <Route
+            path="/staff/studentWeeks/:studentId"
+            element={<StaffStudentWeeks />}
+          />
           <Route path="/more" element={<More />} />
           <Route
             path="/admin"
