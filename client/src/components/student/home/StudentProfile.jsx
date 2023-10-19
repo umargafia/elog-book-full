@@ -1,9 +1,8 @@
 import { Button, Divider, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import Axios from 'axios';
 import React, { useState } from 'react';
-import API, { UpdateUser } from '../../../api';
 
+import { UpdateUser } from '../../../api';
 import { MyInput } from '../../globalCompanents/MyInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { StudentAction } from '../../../store/studentSlice';

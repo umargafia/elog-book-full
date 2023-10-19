@@ -38,6 +38,10 @@ const createSendToken = (user, statusCode, res) => {
       phone: user.phone,
       regno: user.regno,
       role: user.role,
+      state: user.state,
+      course: user.course,
+      localgov: user.localgov,
+      organization: user.organization,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt
     }
@@ -127,13 +131,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // 3) If everything ok, send token to client
-  // createSendToken(user, 200, res);
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-    data: user
-  });
+  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {

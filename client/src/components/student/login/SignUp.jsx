@@ -1,9 +1,9 @@
 import { Typography } from '@mui/material';
-import Axios from 'axios';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import API, { LoginUser, SignUpUser } from '../../../api';
+
+import { SignUpUser } from '../../../api';
 import { StudentAction } from '../../../store/studentSlice';
 import {
   FormButton,

@@ -4,9 +4,8 @@ import { Box } from '@mui/system';
 import Axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
 
-import API from '../../../api';
+import API, { CreateWeek, GetAllWeeks, deleteWeek } from '../../../api';
 import { StudentAction } from '../../../store/studentSlice';
 import { Footer } from '../../globalCompanents/Footer';
 import { FormButton, HeadingSecondary } from '../../globalCompanents/Global';
@@ -18,49 +17,52 @@ import { StudentProfile } from './StudentProfile';
 
 export const StudentHome = () => {
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.student);
+  const { user, token } = useSelector((state) => state.student);
   const [weeks, setWeeks] = useState([]);
   const [length, setLength] = useState(0);
   const [weekName, setWeekName] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
+  const getWeeks = async () => {
+    const response = await GetAllWeeks({ userId: user.id, token });
+    if (response.status === 'success') {
+      const data = response.data;
+      setWeeks(data.reverse());
+      setLength(data.length);
+    }
+  };
 
   useEffect(() => {
     getWeeks();
     setWeekName(parseInt(length) + 1);
-  }, [length]);
-
-  const getWeeks = () => {
-    Axios.get(`${API}/students/weeks/${user._id}`)
-      .then((response) => {
-        const data = response.data;
-        setWeeks(data.data.weeks);
-        setLength(data.noOfWeeks);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  }, [user, token, length]);
 
   const addWeek = () => {
     dispatch(StudentAction.model());
   };
 
-  const createWeek = () => {
-    Axios.post(`${API}/students/createWeek`, {
+  const createWeek = async (e) => {
+    e.preventDefault();
+    if (!weekName || !startDate) {
+      return;
+    }
+    setLoading(true);
+    const data = {
       name: weekName,
-      weekId: user._id,
-    })
-      .then(() => getWeeks())
-      .catch((e) => {
-        console.log(e);
-      });
+      startDate,
+    };
+
+    const response = await CreateWeek({ data, token });
+    getWeeks();
     dispatch(StudentAction.model());
+    setLoading(false);
   };
 
-  const deleteWeek = (id) => {
-    Axios.delete(`${API}/students/weeks/${id}`)
-      .then(() => getWeeks())
-      .catch((e) => console.log(e));
+  const HandleDeleteWeek = async (id) => {
+    await deleteWeek({ token, weekId: id });
+    getWeeks();
   };
   const style = {
     card: {
@@ -86,7 +88,7 @@ export const StudentHome = () => {
       />
       <Card sx={style.card}>
         <Box display="flex" flexWrap="wrap">
-          <Box flex={3}>
+          <Box flex={3} height="70vh" overflow="scroll" mr={2}>
             {length !== 0 ? (
               weeks.map((w) => {
                 return (
@@ -97,7 +99,7 @@ export const StudentHome = () => {
                       navigate(`/studentWeek/${w._id}`);
                     }}
                     deleteAction={() => {
-                      deleteWeek(w._id);
+                      HandleDeleteWeek(w._id);
                     }}
                   />
                 );
@@ -137,7 +139,14 @@ export const StudentHome = () => {
             value={weekName}
             onChange={(e) => setWeekName(e.target.value)}
           />
-          <FormButton text={'create'} />
+          <MyInput
+            text={'Start Data'}
+            type="date"
+            required
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <FormButton text={loading ? 'loading' : 'create'} />
         </form>
       </Model>
       {length !== 0 && <Footer />}

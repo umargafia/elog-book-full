@@ -2,6 +2,8 @@ import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
 import { MyInput } from '../../globalCompanents/MyInput';
 import Tabs from '../../globalCompanents/Tabs';
 import {
@@ -11,10 +13,8 @@ import {
   MyBackArrow,
 } from '../../globalCompanents/Global';
 import { SignUp } from './SignUp';
-import API, { LoginUser } from '../../../api';
-import { useDispatch } from 'react-redux';
+import { LoginUser } from '../../../api';
 import { StudentAction } from '../../../store/studentSlice';
-import Axios from 'axios';
 
 export const StudentLogin = () => {
   return (
