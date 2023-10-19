@@ -93,6 +93,7 @@ export const StudentHome = () => {
                 return (
                   <StudentWeeks
                     key={w._id}
+                    date={w}
                     name={w.name}
                     onClick={() => {
                       navigate(`/studentWeek/${w._id}`);

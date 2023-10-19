@@ -92,6 +92,13 @@ export const GetAllWeeks = async ({ token, userId }) => {
   });
 };
 
+export const GetWeek = async ({ token, weekId }) => {
+  return await sendRequest({
+    url: `weeks/getWeek/${weekId}`,
+    token,
+  });
+};
+
 export const CreateWeek = async ({ token, data }) => {
   return await sendRequest({
     url: `weeks/create`,
