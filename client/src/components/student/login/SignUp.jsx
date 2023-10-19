@@ -1,9 +1,9 @@
 import { Typography } from '@mui/material';
-import Axios from 'axios';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import API from '../../../api';
+
+import { SignUpUser } from '../../../api';
 import { StudentAction } from '../../../store/studentSlice';
 import {
   FormButton,
@@ -23,50 +23,49 @@ export const SignUp = () => {
   const [regNumber, setRegNumber] = useState('');
   const [password, setPassword] = useState('');
   const [number, setNumber] = useState('');
-  const [department, setDepartment] = useState('');
-  const [course, setCourse] = useState('');
-  const [company, setCompany] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
   //signup student
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
     setLoading(true);
     const data = {
+      name,
       email,
       password,
-      name,
-      regNo: regNumber,
-      number,
-      department,
-      course,
-      company,
+      passwordConfirm,
+      phone: number,
+      regno: regNumber,
     };
 
-    Axios.post(`${API}/students/register`, data)
-      .then((response) => {
-        dispatch(StudentAction.login(response.data));
-        navigate('/studentHome');
-        setLoading(false);
-      })
-      .catch((error) => {
-        const message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setLoading(false);
-        setError(message);
-      });
+    const response = await SignUpUser({ data });
+
+    if (response?.status !== 'success') {
+      setLoading(false);
+      setError(response?.message);
+      return;
+    }
+
+    dispatch(StudentAction.login(response));
+    setLoading(false);
+    navigate('/studentHome');
   };
+
   return (
     <form style={FormStyle} onSubmit={handleSignup}>
       <HeadingSecondary
         text="Create an Account"
         style={{ marginBottom: '2rem', textTransform: 'unset' }}
       />
-
+      <MyInput
+        onChange={(e) => {
+          setName(e.target.value);
+        }}
+        type={'text'}
+        text="student Name"
+        required={true}
+      />
       <MyInput
         onChange={(e) => {
           setEmail(e.target.value);
@@ -85,18 +84,10 @@ export const SignUp = () => {
       />
       <MyInput
         onChange={(e) => {
-          setName(e.target.value);
+          setPasswordConfirm(e.target.value);
         }}
-        type={'text'}
-        text="student Name"
-        required={true}
-      />
-      <MyInput
-        onChange={(e) => {
-          setRegNumber(e.target.value);
-        }}
-        type={'text'}
-        text="registration number"
+        type={'password'}
+        text="confirm password"
         required={true}
       />
       <MyInput
@@ -109,37 +100,21 @@ export const SignUp = () => {
       />
       <MyInput
         onChange={(e) => {
-          setDepartment(e.target.value);
+          setRegNumber(e.target.value);
         }}
         type={'text'}
-        text="department"
+        text="registration number"
         required={true}
       />
-      <MyInput
-        onChange={(e) => {
-          setCourse(e.target.value);
-        }}
-        type={'text'}
-        text="course of study"
-        required={true}
-      />
-      <MyInput
-        onChange={(e) => {
-          setCompany(e.target.value);
-        }}
-        type={'text'}
-        text="name of company attached"
-        required={true}
-      />
+      {error && (
+        <Typography variant="h4" textAlign={'center'} color="red" mb={1}>
+          {error}
+        </Typography>
+      )}
       <FormButton
         text={loading ? 'loading...' : 'Create Account'}
         onClick={handleSignup}
       />
-      {error && (
-        <Typography variant="h3" textAlign={'center'} color="red">
-          {error}
-        </Typography>
-      )}
     </form>
   );
 };

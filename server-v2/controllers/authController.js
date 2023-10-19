@@ -38,6 +38,10 @@ const createSendToken = (user, statusCode, res) => {
       phone: user.phone,
       regno: user.regno,
       role: user.role,
+      state: user.state,
+      course: user.course,
+      localgov: user.localgov,
+      organization: user.organization,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt
     }

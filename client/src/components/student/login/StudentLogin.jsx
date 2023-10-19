@@ -2,6 +2,8 @@ import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
 import { MyInput } from '../../globalCompanents/MyInput';
 import Tabs from '../../globalCompanents/Tabs';
 import {
@@ -11,10 +13,8 @@ import {
   MyBackArrow,
 } from '../../globalCompanents/Global';
 import { SignUp } from './SignUp';
-import API from '../../../api';
-import { useDispatch } from 'react-redux';
+import { LoginUser } from '../../../api';
 import { StudentAction } from '../../../store/studentSlice';
-import Axios from 'axios';
 
 export const StudentLogin = () => {
   return (
@@ -33,28 +33,26 @@ const Login = () => {
   const [error, setError] = useState(false);
   const dispatch = useDispatch();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    Axios.post(`${API}/students/login`, {
+
+    const data = {
       email: userName,
-      password: password,
-    })
-      .then((data) => {
-        dispatch(StudentAction.login(data.data));
-        setLoading(false);
-        navigate('/studentHome');
-      })
-      .catch((error) => {
-        const message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setLoading(false);
-        setError(message);
-      });
+      password,
+    };
+
+    const response = await LoginUser({ data });
+
+    if (response?.status !== 'success') {
+      setLoading(false);
+      setError(response?.message);
+      return;
+    }
+
+    dispatch(StudentAction.login(response));
+    setLoading(false);
+    navigate('/studentHome');
   };
 
   return (
@@ -76,13 +74,12 @@ const Login = () => {
         required={true}
         onChange={(e) => setPassword(e.target.value)}
       />
-
-      <FormButton text={loading ? 'loading...' : 'Login'} />
       {error && (
-        <Typography variant="h3" textAlign={'center'} color="red">
+        <Typography variant="h4" mb={1} textAlign={'center'} color="red">
           {error}
         </Typography>
       )}
+      <FormButton text={loading ? 'loading...' : 'Login'} />
     </form>
   );
 };

@@ -28,7 +28,7 @@ function App() {
           <Route
             path="/"
             exact
-            element={user?.type === 'student' ? <StudentHome /> : <HomePage />}
+            element={user?.role === 'student' ? <StudentHome /> : <HomePage />}
           />
           <Route path="/student" element={<StudentLogin />} />
           <Route path="/staff" element={<StaffLogin />} />

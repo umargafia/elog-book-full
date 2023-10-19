@@ -1,4 +1,4 @@
-const API = 'http://localhost:4000/api';
+const API = 'http://localhost:4000/api/v1/';
 export default API;
 export const sendRequest = async ({ url, data, method, token }) => {
   try {
@@ -88,6 +88,13 @@ export const GetUser = async ({ token, userId }) => {
 export const GetAllWeeks = async ({ token, userId }) => {
   return await sendRequest({
     url: `weeks/getAllWeeks/${userId}`,
+    token,
+  });
+};
+
+export const GetWeek = async ({ token, weekId }) => {
+  return await sendRequest({
+    url: `weeks/getWeek/${weekId}`,
     token,
   });
 };

@@ -57,6 +57,7 @@ export const MyInput = (props) => {
     name,
     label,
     hideLebel,
+    inputProps,
   } = props;
   const classes = useStyle();
 
@@ -72,6 +73,7 @@ export const MyInput = (props) => {
         value={value}
         name={name}
         style={style}
+        {...inputProps}
       />
     </div>
   );
