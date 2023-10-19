@@ -2,7 +2,6 @@ import { Typography, IconButton, Card } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shadow, Shadow2 } from '../../globalCompanents/Global';
 import { Delete } from '@mui/icons-material';
 import formatDate from '../../../constants/formatDate';
 

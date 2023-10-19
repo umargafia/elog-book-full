@@ -1,15 +1,16 @@
-import { Card, Divider, Input, TextField, Typography } from '@mui/material';
+import { Card, Divider, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import API, { CreateDay, GetWeek, getAllDays } from '../../../api';
 
+import API, { CreateDay, GetWeek, getAllDays } from '../../../api';
 import { Day } from './Day';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { ArrowBackIos } from '@mui/icons-material';
 import formatDaysFunction from '../../../constants/FromatDaysFunction';
 import formatDate from '../../../constants/formatDate';
+import { HeadingTertiary } from '../../globalCompanents/Global';
 
 export const StudentWeek = () => {
   // Destructure variables directly in the function signature
@@ -47,7 +48,7 @@ export const StudentWeek = () => {
 
   const handleGetWeek = async () => {
     const response = await GetWeek({ token, weekId: id });
-    console.log(response);
+
     setWeekInfo({
       weekName: response.data.name,
       WeekDate: response.data.startDate,
@@ -84,7 +85,7 @@ export const StudentWeek = () => {
   };
 
   return (
-    <Card sx={{ minHeight: '99vh', width: '100%' }}>
+    <Card sx={{ minHeight: '99vh', width: '100%', background: '#eee' }}>
       <Grid container p={2}>
         <Grid xs={12}>
           <Box
@@ -112,6 +113,33 @@ export const StudentWeek = () => {
             </Typography>
           </Box>
           <Divider />
+        </Grid>
+        <Grid xs={12}>
+          <HeadingTertiary text="Days" />
+        </Grid>
+
+        <Grid xs={12} display="flex">
+          <Box flex={2}>
+            {days.map((day) => (
+              <Day day={day} key={day._id} weekId={id} />
+            ))}
+          </Box>
+          <Box flex={1}>
+            <Card sx={{ width: '100%', height: '50vh', mt: 1, ml: 1 }}>
+              <HeadingTertiary text="Supervisor review" />
+              <Divider></Divider>
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height={'80%'}
+              >
+                <Typography variant="h5" color="gray">
+                  No Massage at the moment
+                </Typography>
+              </Box>
+            </Card>
+          </Box>
         </Grid>
       </Grid>
     </Card>
