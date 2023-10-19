@@ -7,7 +7,7 @@ import { MyInput } from '../../globalCompanents/MyInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { StudentAction } from '../../../store/studentSlice';
 
-export const StudentProfile = () => {
+export const StudentProfile = ({ staff }) => {
   const [loading, setLoading] = useState(false);
   const { user, token } = useSelector((state) => state.student);
 
@@ -68,22 +68,32 @@ export const StudentProfile = () => {
   return (
     <Box p={2} overflow="auto" height={450}>
       <Typography textAlign="center" variant="h3" color="brown">
-        {isUpdate ? 'Update' : 'Student'} Information
+        {isUpdate ? 'Update' : !staff ? 'Student' : 'Staff'} Information
       </Typography>
       <Divider />
       {!isUpdate ? (
         <Box mt={3}>
           <ListItem header="name" title={user.name || 'N/A'} />
-          <ListItem header="Matric No" title={user.regno || 'N/A'} />
-          <ListItem header="email" title={user.email || 'N/A'} />
+          {!staff && (
+            <ListItem header="Matric No" title={user.regno || 'N/A'} />
+          )}
+          <ListItem header="email" small title={user.email || 'N/A'} />
           <ListItem header="Phone Number" title={user.phone || 'N/A'} />
-          <ListItem header="course of study" title={user.course || 'N/A'} />
-          <ListItem header="State of SIWES" title={user.state || 'N/A'} />
-          <ListItem header="Local Government" title={user.localgov || 'N/A'} />
-          <ListItem
-            header="Siwes Organization"
-            title={user.organization || 'N/A'}
-          />
+
+          {!staff && (
+            <>
+              <ListItem header="course of study" title={user.course || 'N/A'} />
+              <ListItem header="State of SIWES" title={user.state || 'N/A'} />
+              <ListItem
+                header="Local Government"
+                title={user.localgov || 'N/A'}
+              />
+              <ListItem
+                header="Siwes Organization"
+                title={user.organization || 'N/A'}
+              />
+            </>
+          )}
         </Box>
       ) : (
         <Box mt={3}>
@@ -96,14 +106,16 @@ export const StudentProfile = () => {
             required
           />
 
-          <MyInput
-            hideLebel
-            value={regNo}
-            onChange={(e) => setRegNo(e.target.value)}
-            type="text"
-            text="Registration number"
-            required
-          />
+          {!staff && (
+            <MyInput
+              hideLebel
+              value={regNo}
+              onChange={(e) => setRegNo(e.target.value)}
+              type="text"
+              text="Registration number"
+              required
+            />
+          )}
           <MyInput
             hideLebel
             value={number}
@@ -112,37 +124,41 @@ export const StudentProfile = () => {
             text="phone number"
             required
           />
-          <MyInput
-            hideLebel
-            value={course}
-            onChange={(e) => setCourse(e.target.value)}
-            type="text"
-            text="Course of Study"
-            required
-          />
-          <MyInput
-            hideLebel
-            value={state}
-            onChange={(e) => setState(e.target.value)}
-            type="text"
-            text="State of SIWES"
-            required
-          />
+          {!staff && (
+            <>
+              <MyInput
+                hideLebel
+                value={course}
+                onChange={(e) => setCourse(e.target.value)}
+                type="text"
+                text="Course of Study"
+                required
+              />
+              <MyInput
+                hideLebel
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                type="text"
+                text="State of SIWES"
+                required
+              />
 
-          <MyInput
-            hideLebel
-            value={localgov}
-            onChange={(e) => setLocalgov(e.target.value)}
-            type="text"
-            text="Localgoverment of SIWES"
-          />
-          <MyInput
-            hideLebel
-            value={organization}
-            onChange={(e) => setOrganization(e.target.value)}
-            type="text"
-            text="Organization"
-          />
+              <MyInput
+                hideLebel
+                value={localgov}
+                onChange={(e) => setLocalgov(e.target.value)}
+                type="text"
+                text="Localgoverment of SIWES"
+              />
+              <MyInput
+                hideLebel
+                value={organization}
+                onChange={(e) => setOrganization(e.target.value)}
+                type="text"
+                text="Organization"
+              />
+            </>
+          )}
           {error && (
             <Typography variant="h4" color="brown" textAlign="center">
               {error}
@@ -185,13 +201,17 @@ export const StudentProfile = () => {
   );
 };
 
-const ListItem = ({ header, title }) => {
+const ListItem = ({ header, title, small }) => {
   return (
     <Box display="flex" m={1} flexWrap="wrap">
-      <Typography variant="h4" textTransform="capitalize" color="gray" mr={1}>
+      <Typography variant="h4" textTransform={'capitalize'} color="gray" mr={1}>
         {header}:
       </Typography>
-      <Typography variant="h4" fontWeight="bold" textTransform="capitalize">
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        textTransform={small ? 'lowercase' : 'capitalize'}
+      >
         {title}
       </Typography>
     </Box>

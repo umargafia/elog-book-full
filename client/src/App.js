@@ -28,7 +28,19 @@ function App() {
           <Route
             path="/"
             exact
-            element={user?.role === 'student' ? <StudentHome /> : <HomePage />}
+            element={
+              !user ? (
+                <HomePage />
+              ) : user.role === 'student' ? (
+                <StudentHome />
+              ) : user.role === 'staff' ? (
+                <StaffHome />
+              ) : (
+                <Admin>
+                  <More />
+                </Admin>
+              )
+            }
           />
           <Route path="/student" element={<StudentLogin />} />
           <Route path="/staff" element={<StaffLogin />} />
