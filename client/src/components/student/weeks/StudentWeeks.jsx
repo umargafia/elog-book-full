@@ -42,11 +42,11 @@ export const StudentWeeks = ({ name, deleteAction, onClick }) => {
     top: '1rem',
   };
   return (
-    <Card sx={style}>
+    <Card sx={style} onClick={onClick}>
       <IconButton onClick={deleteAction} sx={buttonStyle}>
         <Delete sx={{ fontSize: '4rem' }} />
       </IconButton>
-      <Box sx={box} onClick={onClick}>
+      <Box sx={box}>
         <Typography
           variant="h3"
           color={'brown'}

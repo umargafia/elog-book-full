@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card } from '@mui/material';
 import { Box } from '@mui/system';
-import Axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import API, { CreateWeek, GetAllWeeks, deleteWeek } from '../../../api';
+import { CreateWeek, GetAllWeeks, deleteWeek } from '../../../api';
 import { StudentAction } from '../../../store/studentSlice';
 import { Footer } from '../../globalCompanents/Footer';
 import { FormButton, HeadingSecondary } from '../../globalCompanents/Global';
@@ -54,7 +53,7 @@ export const StudentHome = () => {
       startDate,
     };
 
-    const response = await CreateWeek({ data, token });
+    await CreateWeek({ data, token });
     getWeeks();
     dispatch(StudentAction.model());
     setLoading(false);
@@ -123,7 +122,7 @@ export const StudentHome = () => {
             )}
           </Box>
           <Box flex={1}>
-            <Card sx={{ height: 500, width: '30rem' }}>
+            <Card sx={{ height: 500, width: '40rem' }}>
               <StudentProfile />
             </Card>
           </Box>

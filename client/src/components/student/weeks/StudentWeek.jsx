@@ -1,130 +1,98 @@
-import { Card, Input, TextField, Typography } from '@mui/material';
+import { Card, Divider, Input, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import API from '../../../api';
-import { Footer } from '../../globalCompanents/Footer';
-import {
-  FormButton,
-  HeadingPrimary,
-  HeadingTertiary,
-  RoundedBox,
-} from '../../globalCompanents/Global';
-import { MyAppBar } from '../../globalCompanents/MyAppBar';
+import { useNavigate, useParams } from 'react-router-dom';
+import API, { CreateDay, getAllDays } from '../../../api';
+
 import { Day } from './Day';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { ArrowBackIos } from '@mui/icons-material';
+import formatDaysFunction from '../../../constants/FromatDaysFunction';
 
 export const StudentWeek = () => {
-  const week = JSON.parse(localStorage.getItem('week'));
-  const weekId = JSON.parse(localStorage.getItem('id'));
+  // Destructure variables directly in the function signature
+  const { id } = useParams();
+  const { token } = useSelector((state) => state.student);
+  const [days, setDays] = useState([]);
 
-  const [from, setFrom] = useState('');
-
+  // Use async/await in useEffect for better readability
   useEffect(() => {
-    getWeek();
+    async function fetchData() {
+      await handleGetWeekDetails();
+    }
+    fetchData();
   }, []);
 
-  const navigate = useNavigate();
-  const style = {
-    card: {
-      padding: '3rem',
-      position: 'relative',
-    },
-    date: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      '&:not(:last-child)': {
-        marginRight: '3rem',
-      },
-    },
-    paragraph: {
-      fontSize: '1.6rem',
-    },
+  const daysArray = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+
+  // Create multiple days using Promise.all for parallel execution
+  const handleCreateDays = async () => {
+    await Promise.all(daysArray.map((day) => handleCreateDay(day)));
+    await handleGetWeekDetails();
   };
 
-  const navigateToHome = () => {
-    navigate('/studentHome');
+  // Handle fetching week details and creating days
+  const handleGetWeekDetails = async () => {
+    try {
+      const response = await getAllDays({ token, weekId: id });
+      if (response.status === 'success') {
+        const currentWeeks = response.data;
+        if (currentWeeks.length !== 0) {
+          const days = formatDaysFunction(currentWeeks);
+          setDays(days);
+        } else {
+          await handleCreateDays();
+        }
+      }
+    } catch (error) {
+      // Handle errors here
+      console.error(error);
+    }
   };
 
-  const navigateToProfile = () => {
-    navigate('/studentProfile');
-  };
-
-  const getWeek = () => {
-    if (weekId === '') return;
-    Axios.get(`${API}/students/week/${weekId}`)
-      .then((res) => {
-        const newWeek = res.data.data.weeks;
-        localStorage.setItem('week', JSON.stringify(newWeek));
-        console.log(week[0].name);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+  // Handle creating a single day
+  const handleCreateDay = async (day) => {
+    try {
+      await CreateDay({ token, data: { day, week: id } });
+    } catch (error) {
+      // Handle errors here
+      console.error(error);
+    }
   };
 
   return (
-    <>
-      <Box sx={style.box}>
-        <Card sx={style.card}>
-          <Box sx={style.date}>
-            <Box sx={style.date}>
-              <Typography variant="h3" marginRight={'2rem'}>
-                From:
+    <Card sx={{ minHeight: '99vh', width: '100%' }}>
+      <Grid container p={2}>
+        <Grid xs={12}>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Box display="flex" alignItems="center" color="blue">
+              <ArrowBackIos sx={{ fontSize: 30 }} />
+              <Typography variant="h4" ml={-1}>
+                Back
               </Typography>
-              <TextField
-                type="date"
-                variant="standard"
-                onChange={(e) => {
-                  setFrom(e.target.value);
-                }}
-              />
             </Box>
-            <Box sx={style.date}>
-              <Typography variant="h3" marginRight={'2rem'}>
-                To:
-              </Typography>
-              <TextField type="date" variant="standard" />
-
-              <div
-                style={{ position: 'absolute', top: '2rem', right: '3.7rem' }}
-              >
-                <FormButton onClick={() => console.log(from)} text={'Update'} />
-              </div>
-            </Box>
-          </Box>
-          <Day day="monday" />
-          <Day day="tuesday" />
-          <Day day="wednesday" />
-          <Day day="thursday" />
-          <Day day="friday" />
-          <Day day="saturday" />
-          <Box sx={style.date}>
-            <TextField
-              multiline
-              maxRows={3}
-              minRows={3}
-              sx={{ width: '45%', marginRight: '3rem' }}
-              variant="filled"
-              label="Add a note"
-            />
-          </Box>
-          <Box sx={RoundedBox}>
-            <HeadingTertiary
-              text={'co-coordinator/head of department comments'}
-            />
-            <Typography variant="p" sx={style.paragraph}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum
-              molestias fugit incidunt adipisci iste est, deserunt velit libero
-              rerum cupiditate voluptate vitae neque officia animi ducimus esse
-              minima suscipit asperiores.
+            <Typography variant="h4" color="green" fontWeight="bold">
+              Week 2
+            </Typography>
+            <Typography variant="h4" color="green">
+              13 May 2023
             </Typography>
           </Box>
-        </Card>
-      </Box>{' '}
-      <Footer />
-    </>
+          <Divider />
+        </Grid>
+      </Grid>
+    </Card>
   );
 };
