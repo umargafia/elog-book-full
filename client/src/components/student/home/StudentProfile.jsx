@@ -2,7 +2,7 @@ import { Button, Divider, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import Axios from 'axios';
 import React, { useState } from 'react';
-import API from '../../../api';
+import API, { UpdateUser } from '../../../api';
 
 import { MyInput } from '../../globalCompanents/MyInput';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import { StudentAction } from '../../../store/studentSlice';
 
 export const StudentProfile = () => {
   const [loading, setLoading] = useState(false);
-  const { user } = useSelector((state) => state.student);
+  const { user, token } = useSelector((state) => state.student);
 
   const [isUpdate, setIsUpdate] = useState(false);
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ export const StudentProfile = () => {
 
   const [error, setError] = useState(false);
 
-  const updateUser = (e) => {
+  const updateUser = async (e) => {
     e.preventDefault();
 
     if (!isUpdate) {
@@ -33,37 +33,37 @@ export const StudentProfile = () => {
       return;
     }
 
-    // if (!name || !number || !department || !course || !company) return;
-    if (!name) {
-      setError('company name cannot be empty');
+    if (!name || !regNo || !number) {
+      setError('name, registration number or phone number  cannot be empty');
       return;
     }
 
     setLoading(true);
 
-    Axios.patch(`${API}/students/update/${user._id}`, {
+    const data = {
       name,
-      regNo,
-      number,
+      regno: regNo,
+      phone: number,
       course,
-    })
-      .then((response) => {
-        dispatch(StudentAction.login(response.data));
-        setError('');
-        setLoading(false);
-        setIsUpdate(false);
-      })
-      .catch((error) => {
-        const message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setLoading(false);
-        setError(message);
-        setLoading(false);
-      });
+      state,
+      localgov,
+      organization,
+    };
+
+    const response = await UpdateUser({ data, token });
+
+    console.log(response);
+
+    if (response.status !== 'success') {
+      setError(response.message);
+      setLoading(false);
+      return;
+    }
+
+    dispatch(StudentAction.login(response));
+    setError('');
+    setLoading(false);
+    setIsUpdate(false);
   };
 
   return (
@@ -136,6 +136,13 @@ export const StudentProfile = () => {
             onChange={(e) => setLocalgov(e.target.value)}
             type="text"
             text="Localgoverment of SIWES"
+          />
+          <MyInput
+            hideLebel
+            value={organization}
+            onChange={(e) => setOrganization(e.target.value)}
+            type="text"
+            text="Organization"
           />
           {error && (
             <Typography variant="h4" color="brown" textAlign="center">

@@ -20,6 +20,7 @@ const sendData = ({ user, statusCode, res }) => {
       regno: user.regno,
       role: user.role,
       state: user.state,
+      course: user.course,
       localgov: user.localgov,
       organization: user.organization,
       createdAt: user.createdAt,
