@@ -1,4 +1,4 @@
-const API = 'http://localhost:4000/api';
+const API = 'http://localhost:4000/api/v1/';
 export default API;
 export const sendRequest = async ({ url, data, method, token }) => {
   try {

@@ -16,11 +16,12 @@ export const StudentProfile = () => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState(user.name || '');
-  const [regNo, setRegNo] = useState(user.regNo || '');
-  const [number, setNumber] = useState(user.number || '');
-  const [department, setDepartment] = useState(user.department || '');
+  const [regNo, setRegNo] = useState(user.regno || '');
+  const [number, setNumber] = useState(user.phone || '');
   const [course, setCourse] = useState(user.course || '');
-  const [company, setCompany] = useState(user.company || '');
+  const [state, setState] = useState(user.state || '');
+  const [localgov, setLocalgov] = useState(user.localgov || '');
+  const [organization, setOrganization] = useState(user.organization || '');
 
   const [error, setError] = useState(false);
 
@@ -44,9 +45,7 @@ export const StudentProfile = () => {
       name,
       regNo,
       number,
-      department,
       course,
-      company,
     })
       .then((response) => {
         dispatch(StudentAction.login(response.data));
@@ -75,13 +74,17 @@ export const StudentProfile = () => {
       <Divider />
       {!isUpdate ? (
         <Box mt={3}>
-          <ListItem header="name" title={user.name} />
-          <ListItem header="email" title={user.email} />
-          <ListItem header="Phone" title={user.number} />
-          <ListItem header="Matric No" title={user.regNo} />
-          <ListItem header="department" title={user.department} />
-          <ListItem header="course of study" title={user.course} />
-          <ListItem header="Siwes Organization" title={user.company} />
+          <ListItem header="name" title={user.name || 'N/A'} />
+          <ListItem header="Matric No" title={user.regno || 'N/A'} />
+          <ListItem header="email" title={user.email || 'N/A'} />
+          <ListItem header="Phone Number" title={user.phone || 'N/A'} />
+          <ListItem header="course of study" title={user.course || 'N/A'} />
+          <ListItem header="State of SIWES" title={user.state || 'N/A'} />
+          <ListItem header="Local Government" title={user.localgov || 'N/A'} />
+          <ListItem
+            header="Siwes Organization"
+            title={user.organization || 'N/A'}
+          />
         </Box>
       ) : (
         <Box mt={3}>
@@ -112,27 +115,27 @@ export const StudentProfile = () => {
           />
           <MyInput
             hideLebel
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
+            value={course}
+            onChange={(e) => setCourse(e.target.value)}
             type="text"
-            text="Department"
+            text="Course of Study"
             required
           />
           <MyInput
             hideLebel
-            value={course}
-            onChange={(e) => setCourse(e.target.value)}
+            value={state}
+            onChange={(e) => setState(e.target.value)}
             type="text"
-            text="Course of study"
+            text="State of SIWES"
             required
           />
 
           <MyInput
             hideLebel
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
+            value={localgov}
+            onChange={(e) => setLocalgov(e.target.value)}
             type="text"
-            text="SIWES Organization"
+            text="Localgoverment of SIWES"
           />
           {error && (
             <Typography variant="h4" color="brown" textAlign="center">

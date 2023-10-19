@@ -85,8 +85,8 @@ export const StudentHome = () => {
         navigateToAdmin={addWeek}
       />
       <Card sx={style.card}>
-        <Grid container>
-          <Grid xs={12} sx={{ height: 600, overflow: 'auto' }} md={8}>
+        <Box display="flex" flexWrap="wrap">
+          <Box flex={3}>
             {length !== 0 ? (
               weeks.map((w) => {
                 return (
@@ -119,13 +119,13 @@ export const StudentHome = () => {
                 </Button>
               </Box>
             )}
-          </Grid>
-          <Grid xs={12} ml={5} md={3.5}>
-            <Card sx={{ height: 500 }}>
+          </Box>
+          <Box flex={1}>
+            <Card sx={{ height: 500, width: '30rem' }}>
               <StudentProfile />
             </Card>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Card>
       <Model>
         <HeadingSecondary text={'Week number'} />
