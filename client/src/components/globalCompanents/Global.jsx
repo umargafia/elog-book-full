@@ -61,7 +61,7 @@ export const FormStyle = {
   paddingTop: '3rem',
 };
 
-export const FormButton = ({ text, onClick }) => {
+export const FormButton = ({ text, onClick, sx }) => {
   return (
     <Button
       variant="contained"
@@ -72,6 +72,7 @@ export const FormButton = ({ text, onClick }) => {
         fontSize: '2.5rem',
         padding: '3rem',
         background: 'green',
+        ...sx,
         '&:hover': {
           background: 'DarkGreen',
         },

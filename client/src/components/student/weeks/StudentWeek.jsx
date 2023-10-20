@@ -1,16 +1,16 @@
-import { Card, Divider, Typography } from '@mui/material';
+import { Button, Card, Divider, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { CreateDay, GetWeek, getAllDays } from '../../../api';
+import { CreateDay, GetWeek, getAllDays, updateWeek } from '../../../api';
 import { Day } from './Day';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { ArrowBackIos } from '@mui/icons-material';
 import formatDaysFunction from '../../../constants/FromatDaysFunction';
 import formatDate from '../../../constants/formatDate';
-import { HeadingTertiary } from '../../globalCompanents/Global';
+import { FormButton, HeadingTertiary } from '../../globalCompanents/Global';
 
 export const StudentWeek = ({ staffData = '' }) => {
   // Destructure variables directly in the function signature
@@ -26,6 +26,8 @@ export const StudentWeek = ({ staffData = '' }) => {
   const [days, setDays] = useState([]);
   const [weekInfo, setWeekInfo] = useState({ weekName: '', WeekDate: '' });
   const navigate = useNavigate();
+  const [isReviewEdit, setReviewEdit] = useState(false);
+  const [review, setReview] = useState('');
 
   // Use async/await in useEffect for better readability
   useEffect(() => {
@@ -60,6 +62,7 @@ export const StudentWeek = ({ staffData = '' }) => {
       weekName: response.data.name,
       WeekDate: response.data.startDate,
     });
+    setReview(response.data.review);
   };
 
   // Handle fetching week details and creating days
@@ -88,6 +91,14 @@ export const StudentWeek = ({ staffData = '' }) => {
     } catch (error) {
       // Handle errors here
       console.error(error);
+    }
+  };
+
+  const handleSubmitReview = async () => {
+    const response = await updateWeek({ token, weekId: id, data: { review } });
+    if (response.status === 'success') {
+      setReview(response.data.review);
+      setReviewEdit(false);
     }
   };
 
@@ -140,16 +151,71 @@ export const StudentWeek = ({ staffData = '' }) => {
             <Card sx={{ width: '100%', height: '50vh', mt: 1, ml: 1 }}>
               <HeadingTertiary text="Supervisor review" />
               <Divider></Divider>
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                height={'80%'}
-              >
-                <Typography variant="h5" color="gray">
-                  No Massage at the moment
-                </Typography>
-              </Box>
+
+              {!isReviewEdit ? (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  flexDirection="column"
+                  sx={{
+                    justifyContent: review ? 'space-between' : 'center',
+                    alignItems: review ? 'flex-start' : 'center',
+                    p: 1,
+                  }}
+                  height={review ? '65%' : '80%'}
+                >
+                  <Typography variant="h5" color="gray">
+                    {review ? review : 'No Massage at the moment'}
+                  </Typography>
+                  {staffData && (
+                    <Button
+                      sx={{ fontSize: 13, alignSelf: 'center' }}
+                      variant="outlined"
+                      onClick={() => setReviewEdit(true)}
+                    >
+                      Edit review
+                    </Button>
+                  )}
+                </Box>
+              ) : (
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  flexDirection="column"
+                  height={'80%'}
+                  mx={3}
+                >
+                  <TextField
+                    multiline
+                    rows={4}
+                    sx={{ mb: 1, fontSize: 20 }}
+                    placeholder="Write your Review"
+                    value={review}
+                    onChange={(e) => setReview(e.target.value)}
+                  />
+                  <Button
+                    sx={{
+                      fontSize: 13,
+                      background: 'green',
+                      '&:hover': {
+                        background: 'green',
+                        opacity: 0.9,
+                      },
+                    }}
+                    variant="contained"
+                    onClick={handleSubmitReview}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    sx={{ fontSize: 13, mt: 2 }}
+                    variant="outlined"
+                    onClick={() => setReviewEdit(false)}
+                  >
+                    cancel
+                  </Button>
+                </Box>
+              )}
             </Card>
           </Box>
         </Grid>

@@ -27,7 +27,7 @@ export const StaffHome = () => {
         std.push(element);
       }
     });
-    setStudents(std.reverse());
+    setStudents(std);
   };
 
   return (
