@@ -1,6 +1,7 @@
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const Week = require('../models/WeekModel');
+const Day = require('../models/dayModel');
 const { filterObj } = require('../utils/FilterObject');
 
 const sendData = ({ status, res, week }) => {
@@ -58,10 +59,15 @@ exports.updateWeek = catchAsync(async (req, res, next) => {
   sendData({ res, status: 201, week });
 });
 exports.deleteWeek = catchAsync(async (req, res, next) => {
-  //get the week id and values to be updated
+  // Get the week id from the request parameters
   const { id } = req.params;
 
-  //delete week
+  // Delete the days associated with the week
+  await Day.deleteMany({ week: id });
+
+  // Delete the week
   const week = await Week.findByIdAndDelete(id);
-  sendData({ res, status: 204, week });
+
+  // Send a response
+  sendData({ res, status: 204, data: week });
 });

@@ -50,9 +50,16 @@ exports.updateDay = catchAsync(async (req, res, next) => {
 exports.GetAllDays = catchAsync(async (req, res, next) => {
   //get the week id
   const { weekId } = req.params;
-  const user = req.user;
 
-  const days = await Day.find({ week: weekId, user });
+  const days = await Day.find({ week: weekId });
 
   sendData({ res, status: 200, week: days });
+});
+
+exports.GetDay = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+
+  const day = await Day.findById(id);
+
+  sendData({ res, status: 200, week: day });
 });

@@ -1,55 +1,52 @@
-import { Box, Card } from "@mui/material";
-import Axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API from "../../../api";
-import {
-  HeadingTertiary,
-  MyCardStyle,
-  RoundedBox,
-} from "../../globalCompanents/Global";
-import { MyAppBar } from "../../globalCompanents/MyAppBar";
-import { Names } from "./Names";
+import { Box, Card } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import { GetAllUsers } from '../../../api';
+import { HeadingTertiary } from '../../globalCompanents/Global';
+import { MyAppBar } from '../../globalCompanents/MyAppBar';
+import { Names } from './Names';
+import { StudentProfile } from '../../student/home/StudentProfile';
 
 export const StaffHome = () => {
-  const staff = JSON.parse(localStorage.getItem("staff"));
+  const { token } = useSelector((state) => state.student);
   const navigate = useNavigate();
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    localStorage.removeItem("id");
     getStudents();
   }, []);
 
-  const getStudents = () => {
-    Axios.get(`${API}/students`).then((res) => {
-      setStudents(res.data);
+  const getStudents = async () => {
+    const response = await GetAllUsers({ token });
+    const data = response.data.data;
+    const std = [];
+    data.forEach((element) => {
+      if (element.role === 'student') {
+        std.push(element);
+      }
     });
+    setStudents(std);
   };
 
-  const navigateToProfile = () => {
-    navigate("/staffProfile");
-  };
   return (
     <Box>
-      <MyAppBar
-        active={"home"}
-        text={staff.name}
-
-        navigateToProfile={navigateToProfile}
-      />
-      <Card sx={MyCardStyle}>
-        <Box sx={RoundedBox}>
-          <HeadingTertiary text={"Students"} />
+      <MyAppBar />
+      <Card sx={{ mt: 3, p: 1, display: 'flex' }}>
+        <Card flex={1} sx={{ mr: 2 }}>
+          <StudentProfile staff />
+        </Card>
+        <Box flex={2} height={'80vh'} overflow="scroll">
+          <HeadingTertiary text={'Students'} />
           {students.map((s) => {
             return (
               <Names
                 key={s._id}
                 name={s.name}
-                RegNumber={s.regNo}
+                RegNumber={s.regno}
                 onclick={() => {
-                  localStorage.setItem("id", JSON.stringify(s));
-                  navigate("/staff/studentWeeks");
+                  navigate(`/staff/studentWeeks/${s._id}`);
                 }}
               />
             );

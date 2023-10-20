@@ -1,11 +1,11 @@
 import { Button, Card, Divider, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useState } from 'react';
-import { updateDay, updateWeek } from '../../../api';
+import React, { useEffect, useState } from 'react';
+import { updateDay } from '../../../api';
 import { useSelector } from 'react-redux';
 import formatDate from '../../../constants/formatDate';
 
-export const Day = ({ day }) => {
+export const Day = ({ day, staffData }) => {
   const [isUpdate, setUpdate] = useState(false);
   const { token } = useSelector((state) => state.student);
   const [note, setNote] = useState(day?.note);
@@ -21,6 +21,7 @@ export const Day = ({ day }) => {
       };
 
       const response = await updateDay({ token, data });
+      console.log(response);
       setLastUpdate(response?.data?.updatedAt);
       setUpdate(false);
     }
@@ -50,23 +51,25 @@ export const Day = ({ day }) => {
             fontWeight="bold"
             textTransform="capitalize"
           >
-            last updated: {formatDate(lastUpdate)}
+            updated: {formatDate(lastUpdate)}
           </Typography>
         )}
-        <Button
-          onClick={handleClick}
-          sx={{
-            fontSize: 20,
-            background: 'green',
-            '&:hover': {
+        {!staffData && (
+          <Button
+            onClick={handleClick}
+            sx={{
+              fontSize: 20,
               background: 'green',
-              opacity: 0.9,
-            },
-          }}
-          variant="contained"
-        >
-          {isUpdate ? 'Save note' : 'edit note'}
-        </Button>
+              '&:hover': {
+                background: 'green',
+                opacity: 0.9,
+              },
+            }}
+            variant="contained"
+          >
+            {isUpdate ? 'Save note' : 'edit note'}
+          </Button>
+        )}
       </Box>
       <Divider
         sx={{

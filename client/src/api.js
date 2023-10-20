@@ -149,3 +149,10 @@ export const updateDay = async ({ token, data }) => {
     data,
   });
 };
+
+export const getDay = async ({ token, id }) => {
+  return await sendRequest({
+    url: `weeks/day/getDay/${id}`,
+    token,
+  });
+};

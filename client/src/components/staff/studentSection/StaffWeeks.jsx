@@ -1,43 +1,46 @@
-import { Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Shadow } from "../../globalCompanents/Global";
+import { Card, Typography } from '@mui/material';
 
-export const StaffWeeks = ({ name }) => {
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import formatDate from '../../../constants/formatDate';
+
+export const StaffWeeks = ({ name, date, id }) => {
   const navigate = useNavigate();
   const style = {
-    background: "white",
-    margin: "0 0rem 2rem 0rem",
-    padding: "1rem 3rem",
-    borderRadius: "1rem",
-    cursor: "pointer",
-    transition: "all 1s",
-    boxShadow: Shadow,
-    "&:hover": {
-      background: "green",
-      "> *": {
-        color: "white",
+    background: '#fefefe',
+    width: '100%',
+    p: 2,
+    margin: '0 0rem 2rem 0rem',
+    borderRadius: '.5rem',
+    cursor: 'pointer',
+    transition: 'all .2s',
+    '&:hover': {
+      background: 'green',
+      '> *': {
+        color: 'white',
       },
     },
   };
 
   return (
-    <Box
+    <Card
       sx={style}
       onClick={() => {
-        navigate("/studentNote");
+        navigate(`/studentNote/${id}`);
       }}
     >
-      <Typography variant="h2" color={"green"}>
-        {name}
+      <Typography
+        variant="h4"
+        textTransform="capitalize"
+        fontWeight="bold"
+        color="green"
+      >
+        week {name}
       </Typography>
-      <Typography variant="h3" color={"brown"} fontWeight="800">
-        From monday
+      <Typography variant="h5" textTransform="capitalize" color="gray">
+        {formatDate(date)}
       </Typography>
-      <Typography variant="h3" color={"rgb(33, 34, 34)"} fontWeight="700">
-        To friday
-      </Typography>
-    </Box>
+    </Card>
   );
 };
