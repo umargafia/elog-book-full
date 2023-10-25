@@ -4,7 +4,7 @@ import { Names } from './Names';
 import { useSelector } from 'react-redux';
 
 export const Students = ({ role }) => {
-  const { token } = useSelector((state) => state.student);
+  const { token, user } = useSelector((state) => state.student);
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
@@ -24,8 +24,13 @@ export const Students = ({ role }) => {
   };
 
   const handleDelete = async (id) => {
-    await RemoveUser({ id, token });
-    getStudents();
+    if (id === user.id) {
+      alert('You cannot delete current user');
+      return;
+    }
+    console.log(id);
+    const res = await RemoveUser({ id, token });
+    getStudents(res);
   };
 
   return (
@@ -36,7 +41,7 @@ export const Students = ({ role }) => {
           RegNumber={student.regno}
           key={student._id}
           student={student}
-          onClick={() => handleDelete(student._id)}
+          onclick={() => handleDelete(student._id)}
         />
       ))}
     </div>

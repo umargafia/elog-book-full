@@ -1,8 +1,6 @@
 import { Delete } from '@mui/icons-material';
 import { Button, Card, Collapse, IconButton, Typography } from '@mui/material';
-import { Box } from '@mui/system';
 import React, { useState } from 'react';
-import { Shadow2 } from '../../globalCompanents/Global';
 import { StudentInfoCard } from '../../staff/studentSection/StudentWeeks';
 
 export const Names = ({ name, RegNumber, onclick, student }) => {
@@ -37,9 +35,11 @@ export const Names = ({ name, RegNumber, onclick, student }) => {
       <Typography variant="h3" sx={style.text} color="green" fontWeight={600}>
         {name}
       </Typography>
-      <Typography variant="h4" color="gray">
-        {RegNumber}
-      </Typography>
+      {student.role === 'student' && (
+        <Typography variant="h4" color="gray">
+          {RegNumber}
+        </Typography>
+      )}
 
       <IconButton onClick={onclick} sx={style.iconButton}>
         <Delete style={{ fontSize: '4rem' }} />
@@ -48,7 +48,10 @@ export const Names = ({ name, RegNumber, onclick, student }) => {
         {expanded ? 'Hide' : 'Show more'}
       </Button>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <StudentInfoCard curStudent={student} staff />
+        <StudentInfoCard
+          curStudent={student}
+          staff={student.role !== 'student' ? true : false}
+        />
       </Collapse>
     </Card>
   );
