@@ -103,33 +103,8 @@ export const StaffStudentWeeks = () => {
           </Box>
           <Card sx={{ flex: 1, ml: 7, height: 500 }}>
             <HeadingTertiary text="Student Information" />
-            <Divider />
-            <ListItem header="Name" title={curStudent?.name || 'N/A'} />
-            <ListItem header="email" small title={curStudent?.email || 'N/A'} />
-            <ListItem
-              header="registration Number"
-              title={curStudent?.regno || 'N/A'}
-            />
-            <ListItem
-              header="Phone Number"
-              title={curStudent?.phone || 'N/A'}
-            />
-            <ListItem
-              header="course of study"
-              title={curStudent?.course || 'N/A'}
-            />
-            <ListItem
-              header="State of SIWES"
-              title={curStudent?.state || 'N/A'}
-            />
-            <ListItem
-              header="Local Government"
-              title={curStudent?.localgov || 'N/A'}
-            />
-            <ListItem
-              header="Siwes Organization"
-              title={curStudent?.organization || 'N/A'}
-            />
+            <StudentInfoCard curStudent={curStudent} />
+            {/* <Divider /> */}
           </Card>
         </Grid>
       </Grid>
@@ -137,30 +112,41 @@ export const StaffStudentWeeks = () => {
   );
 };
 
-{
-  /* <Box sx={style.main}>
-  <Box sx={style.left}>
-    <Box sx={style.roundedBox}>
-      {weeks.map((e) => {
-        return <StaffWeeks name={e.name} key={e._id} />;
-      })}
-    </Box>
-  </Box>
-  <Box sx={style.right}>
-    <HeadingSecondary text={'Student Information'} />
-    <Box sx={style.info}>
-      <MyInfo text={'name'} value={student.name} />
-      <MyInfo text={'registration number'} value={student.regno} />
-      <MyInfo text={'Course of study'} value={student.course} />
-      <MyInfo text={'Organization'} value={student.organization} />
-    </Box>
-
-    <Box sx={style.sign}>
-      <FormButton text={'More'} onClick={() => navigate('/more')} />
-    </Box>
-  </Box>
-</Box>; */
-}
+export const StudentInfoCard = ({ curStudent, staff }) => {
+  return (
+    <>
+      <ListItem header="Name" title={curStudent?.name || 'N/A'} />
+      <ListItem header="email" small title={curStudent?.email || 'N/A'} />
+      {!staff && (
+        <ListItem
+          header="registration Number"
+          title={curStudent?.regno || 'N/A'}
+        />
+      )}
+      <ListItem header="Phone Number" title={curStudent?.phone || 'N/A'} />
+      {!staff && (
+        <>
+          <ListItem
+            header="course of study"
+            title={curStudent?.course || 'N/A'}
+          />
+          <ListItem
+            header="State of SIWES"
+            title={curStudent?.state || 'N/A'}
+          />
+          <ListItem
+            header="Local Government"
+            title={curStudent?.localgov || 'N/A'}
+          />
+          <ListItem
+            header="Siwes Organization"
+            title={curStudent?.organization || 'N/A'}
+          />
+        </>
+      )}
+    </>
+  );
+};
 
 const style = {
   main: {

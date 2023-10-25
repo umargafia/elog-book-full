@@ -1,55 +1,55 @@
-import { Delete } from "@mui/icons-material";
-import { IconButton, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import React from "react";
-import { Shadow2 } from "../../globalCompanents/Global";
+import { Delete } from '@mui/icons-material';
+import { Button, Card, Collapse, IconButton, Typography } from '@mui/material';
+import { Box } from '@mui/system';
+import React, { useState } from 'react';
+import { Shadow2 } from '../../globalCompanents/Global';
+import { StudentInfoCard } from '../../staff/studentSection/StudentWeeks';
 
-export const Names = ({ name, RegNumber, onclick, id }) => {
+export const Names = ({ name, RegNumber, onclick, student }) => {
+  const [expanded, setExpanded] = useState(false);
   const style = {
     main: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "0rem 10rem",
-      marginBottom: "2rem",
-      background: "rgba(118, 116, 116, 0.1)",
-      boxShadow: Shadow2,
-      borderRadius: ".3rem",
-      transition: "1s",
-      overFlow: "hidden",
-      cursor: "pointer",
-      "&:hover": {
-        background: "green",
-        "> *": {
-          color: "white",
-        },
-      },
+      padding: 2,
+      marginBottom: '2rem',
+      background: '#fefefe',
+      transition: '1s',
+      overFlow: 'hidden',
+      cursor: 'pointer',
+      position: 'relative',
     },
     text: {
-      textTransform: "uppercase",
+      textTransform: 'uppercase',
     },
-    nav: {
-      padding: "2rem 50% 2rem 2rem",
-      transition: "1s",
-      "&:hover": {
-        "> *": {
-          color: "white",
-        },
-      },
+    iconButton: {
+      position: 'absolute',
+      top: 2,
+      right: 2,
+      zIndex: 30,
     },
   };
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
   return (
-    <Box sx={style.main} >
+    <Card sx={style.main}>
       <Typography variant="h3" sx={style.text} color="green" fontWeight={600}>
         {name}
       </Typography>
-      <Typography variant="h3" sx={style.text} color="gray">
+      <Typography variant="h4" color="gray">
         {RegNumber}
       </Typography>
 
-      <IconButton onClick={onclick}>
-        <Delete style={{ fontSize: "4rem" }} />
+      <IconButton onClick={onclick} sx={style.iconButton}>
+        <Delete style={{ fontSize: '4rem' }} />
       </IconButton>
-    </Box>
+      <Button variant="outlined" fullWidth onClick={handleExpandClick}>
+        {expanded ? 'Hide' : 'Show more'}
+      </Button>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <StudentInfoCard curStudent={student} staff />
+      </Collapse>
+    </Card>
   );
 };
