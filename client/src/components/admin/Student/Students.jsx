@@ -1,34 +1,49 @@
-import { Alert } from "@mui/material";
-import Axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API from "../../../api";
-import { Names } from "./Names";
+import React, { useEffect, useState } from 'react';
+import { GetAllUsers, RemoveUser } from '../../../api';
+import { Names } from './Names';
+import { useSelector } from 'react-redux';
 
-export const Students = () => {
+export const Students = ({ role }) => {
+  const { token, user } = useSelector((state) => state.student);
   const [students, setStudents] = useState([]);
+
   useEffect(() => {
     getStudents();
   }, []);
 
-  const getStudents = () => {
-    Axios.get(`${API}/students`).then((res) => {
-      setStudents(res.data);
-      });
+  const getStudents = async () => {
+    const response = await GetAllUsers({ token });
+    if (response.status === 'success') {
+      const data = response.data.data;
+      if (!role) {
+        setStudents(data.filter((student) => student.role === 'student'));
+        return;
+      }
+      setStudents(data.filter((student) => student.role !== 'student'));
+    }
   };
 
-  const handleDelete = (id) => {
-    Axios.delete(`${API}/students/delete/${id}`).then(() => getStudents());
+  const handleDelete = async (id) => {
+    if (id === user.id) {
+      alert('You cannot delete current user');
+      return;
+    }
+    console.log(id);
+    const res = await RemoveUser({ id, token });
+    getStudents(res);
   };
 
-  return students.map((cur) => {
-    return (
-      <Names
-        name={cur.name}
-        RegNumber={cur.regNo}
-        key={cur._id}
-        onclick={() => handleDelete(cur._id)}
-      />
-    );
-  });
+  return (
+    <div>
+      {students.map((student) => (
+        <Names
+          name={student.name}
+          RegNumber={student.regno}
+          key={student._id}
+          student={student}
+          onclick={() => handleDelete(student._id)}
+        />
+      ))}
+    </div>
+  );
 };
